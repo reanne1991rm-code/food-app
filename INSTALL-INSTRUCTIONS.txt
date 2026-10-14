@@ -1,0 +1,13 @@
+FOOD APP UPDATE — FOLDER 1: FOOD SAFETY MANAGEMENT
+
+1. Make a backup copy of your current business-hub-v1/src/App.tsx.
+2. Extract this ZIP.
+3. Copy the included business-hub-v1/src/App.tsx into your existing project at src/App.tsx, replacing the old file.
+4. Do not replace package.json or any other files for this update.
+5. In CMD, open your project folder and run: npm run dev
+6. Open the local URL Vite prints. In the left menu, choose “Folder 1 — Food Safety Management”.
+7. Check the page and open a template. This app currently saves documents in this browser's local storage; Supabase cloud sync is not connected yet.
+8. Test a production build with: npm run build
+9. Only after testing, commit and push the changes to GitHub.
+
+The app migrates the 14 new templates into existing local browser data by their IDs. Templates are starter documents, not completed compliance records. Verify procedures and allergen details for your real menu and equipment.
