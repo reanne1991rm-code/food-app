@@ -71,3 +71,740 @@ body { background: #080808; }
   .sk-quick-links { padding:14px; }
   .sk-quick-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
+
+
+/* Exact target: the lower summary banner with shield icon and document count */
+.safety-banner {
+  background: linear-gradient(135deg, #171510 0%, #090909 100%) !important;
+  color: #f4ead1 !important;
+  border: 1px solid rgba(239, 189, 75, 0.78) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 0 22px rgba(239, 189, 75, 0.045), 0 8px 24px rgba(0, 0, 0, 0.28) !important;
+}
+.safety-banner .safety-banner-icon {
+  background: rgba(239, 189, 75, 0.13) !important;
+  color: #efbd4b !important;
+  border: 1px solid rgba(239, 189, 75, 0.28) !important;
+}
+.safety-banner .safety-banner-copy h2 {
+  color: #f7d47a !important;
+}
+.safety-banner .safety-banner-copy p,
+.safety-banner .safety-progress span {
+  color: #c7bdab !important;
+}
+.safety-banner .safety-progress {
+  border-left-color: rgba(239, 189, 75, 0.3) !important;
+}
+.safety-banner .safety-progress strong {
+  color: #f7d47a !important;
+}
+
+
+/* Exact upper heading section on the Food Safety Management page */
+.safety-folder-page-heading .eyebrow {
+  color: #f2c45b !important;
+}
+.safety-folder-page-heading h1 {
+  color: #f2c45b !important;
+}
+.safety-folder-page-heading .page-subtitle {
+  color: #ffffff !important;
+}
+
+
+/* Gold-and-white structured editor for Food Safety Management Overview */
+.overview-form { display:flex; flex-direction:column; gap:18px; }
+.overview-form-intro, .overview-guidance { padding:15px 17px; border:1px solid rgba(239,189,75,.4); border-radius:13px; background:linear-gradient(135deg,rgba(239,189,75,.09),rgba(0,0,0,.12)); color:#f5ead0; }
+.overview-form-intro b, .overview-guidance b { color:#f2c45b; }
+.overview-form-intro p { margin:6px 0 0; color:#e7dfce; line-height:1.5; }
+.overview-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.overview-form .field-label { display:flex; flex-direction:column; gap:7px; color:#f2c45b; font-weight:650; }
+.overview-form .field-label input, .overview-form .field-label select, .overview-form .field-label textarea { width:100%; min-width:0; box-sizing:border-box; padding:12px 13px; border-radius:10px; border:1px solid rgba(239,189,75,.35); background:#11110f; color:#fff; font:inherit; font-weight:400; outline:none; }
+.overview-form .field-label input:focus, .overview-form .field-label select:focus, .overview-form .field-label textarea:focus { border-color:#f2c45b; box-shadow:0 0 0 3px rgba(242,196,91,.12); }
+.overview-form .field-label input::placeholder, .overview-form .field-label textarea::placeholder { color:#8e887c; }
+.overview-notes { min-height:90px; resize:vertical; }
+.overview-guidance ul { margin:9px 0 0; padding-left:20px; color:#e7dfce; line-height:1.6; }
+.overview-preview { border:1px solid rgba(239,189,75,.3); border-radius:12px; padding:12px 15px; color:#f2c45b; }
+.overview-preview summary { cursor:pointer; font-weight:650; }
+.overview-preview pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:320px; overflow:auto; color:#eee7d9; font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
+@media (max-width:650px) { .overview-form-grid { grid-template-columns:1fr; } }
+
+
+/* Improve contrast for the Before saving guidance and preview disclosure */
+.overview-guidance {
+  background: #17140d !important;
+  border: 1px solid #d5a83e !important;
+  color: #ffffff !important;
+}
+.overview-guidance b {
+  color: #ffd36a !important;
+}
+.overview-guidance ul,
+.overview-guidance li {
+  color: #ffffff !important;
+}
+.overview-guidance li::marker {
+  color: #f2c45b !important;
+}
+.overview-preview {
+  background: #11110f !important;
+  border-color: #d5a83e !important;
+  color: #ffd36a !important;
+}
+.overview-preview summary {
+  color: #ffd36a !important;
+}
+.overview-preview pre {
+  color: #ffffff !important;
+}
+
+
+/* Match the document editor's remaining light surfaces to The Small Kitchen black-and-gold theme */
+.editor-modal,
+.document-editor-modal,
+.modal-content,
+.editor-panel {
+  background: #0c0c0b !important;
+  color: #fff8e8 !important;
+  border-color: #c99a2e !important;
+}
+.editor-modal .modal-header,
+.document-editor-modal .modal-header,
+.modal-content .modal-header {
+  background: #0c0c0b !important;
+  color: #f2c45b !important;
+}
+.editor-modal h1, .editor-modal h2, .editor-modal h3,
+.document-editor-modal h1, .document-editor-modal h2, .document-editor-modal h3,
+.modal-content h1, .modal-content h2, .modal-content h3 {
+  color: #f2c45b !important;
+}
+.editor-modal p, .document-editor-modal p, .modal-content p,
+.editor-modal .muted, .document-editor-modal .muted, .modal-content .muted {
+  color: #e7dfce !important;
+}
+
+/* Form fields and dropdowns: black surfaces, gold border, white selected text */
+.overview-form .field-label input,
+.overview-form .field-label select,
+.overview-form .field-label textarea {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  color-scheme: dark;
+}
+.overview-form .field-label select option {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+}
+.overview-form .field-label select option:checked {
+  background-color: #8a6417 !important;
+  color: #ffffff !important;
+}
+.overview-form .field-label input::placeholder,
+.overview-form .field-label textarea::placeholder {
+  color: #b8ad98 !important;
+  opacity: 1;
+}
+
+/* Intro panel and preview use readable dark-and-gold surfaces */
+.overview-form-intro {
+  background: #17140d !important;
+  color: #ffffff !important;
+  border-color: #d5a83e !important;
+}
+.overview-form-intro b {
+  color: #ffd36a !important;
+}
+.overview-form-intro p {
+  color: #ffffff !important;
+}
+.overview-guidance {
+  background: #17140d !important;
+  color: #ffffff !important;
+}
+.overview-preview {
+  background: #11110f !important;
+  color: #ffd36a !important;
+}
+
+
+/* Policy document form shares the black-and-gold overview editor theme */
+.policy-form .overview-form-intro {
+  background: #17140d !important;
+  color: #ffffff !important;
+  border-color: #d5a83e !important;
+}
+.policy-form .overview-form-intro b { color: #ffd36a !important; }
+.policy-form .overview-form-intro p { color: #ffffff !important; }
+.policy-form .overview-guidance {
+  background: #17140d !important;
+  border: 1px solid #d5a83e !important;
+  color: #ffffff !important;
+}
+.policy-form .overview-guidance b { color: #ffd36a !important; }
+.policy-form .overview-guidance li { color: #ffffff !important; }
+.policy-form .overview-form-grid select option {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+}
+
+
+/* Final, specific styling for the document editor and policy form */
+section.editor-panel {
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+  border: 1px solid #b98a27 !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .36) !important;
+}
+section.editor-panel .editor-top,
+section.editor-panel .editor-top > div {
+  background: transparent !important;
+  color: #fff8e8 !important;
+}
+section.editor-panel .editor-top h2,
+section.editor-panel .editor-top .eyebrow {
+  color: #f2c45b !important;
+}
+section.editor-panel .editor-top p,
+section.editor-panel .editor-note,
+section.editor-panel .autosave-note {
+  color: #e7dfce !important;
+}
+section.editor-panel > .field-label {
+  background: transparent !important;
+  color: #f2c45b !important;
+}
+section.editor-panel > .field-label input,
+section.editor-panel .overview-form .field-label input,
+section.editor-panel .overview-form .field-label select,
+section.editor-panel .overview-form .field-label textarea,
+section.editor-panel .policy-form .field-label input,
+section.editor-panel .policy-form .field-label select,
+section.editor-panel .policy-form .field-label textarea {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  caret-color: #ffd36a;
+  color-scheme: dark;
+}
+section.editor-panel .overview-form .field-label,
+section.editor-panel .policy-form .field-label {
+  color: #ffd36a !important;
+}
+section.editor-panel .overview-form input::placeholder,
+section.editor-panel .overview-form textarea::placeholder,
+section.editor-panel .policy-form input::placeholder,
+section.editor-panel .policy-form textarea::placeholder,
+section.editor-panel > .field-label input::placeholder {
+  color: #b8ad98 !important;
+  opacity: 1 !important;
+}
+section.editor-panel .overview-form select option,
+section.editor-panel .policy-form select option {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+}
+section.editor-panel .overview-form select option:checked,
+section.editor-panel .policy-form select option:checked {
+  background: #76530d !important;
+  color: #ffffff !important;
+}
+section.editor-panel .overview-form-intro,
+section.editor-panel .overview-guidance,
+section.editor-panel .policy-form .overview-form-intro,
+section.editor-panel .policy-form .overview-guidance {
+  background: #17140d !important;
+  border: 1px solid #c99a2e !important;
+  color: #fff8e8 !important;
+}
+section.editor-panel .overview-form-intro b,
+section.editor-panel .overview-guidance b,
+section.editor-panel .policy-form .overview-form-intro b,
+section.editor-panel .policy-form .overview-guidance b {
+  color: #ffd36a !important;
+}
+section.editor-panel .overview-form-intro p,
+section.editor-panel .overview-guidance li,
+section.editor-panel .policy-form .overview-form-intro p,
+section.editor-panel .policy-form .overview-guidance li {
+  color: #fff8e8 !important;
+}
+section.editor-panel .overview-preview,
+section.editor-panel .policy-form .overview-preview {
+  background: #11110f !important;
+  border: 1px solid #c99a2e !important;
+  color: #ffd36a !important;
+}
+section.editor-panel .overview-preview summary,
+section.editor-panel .policy-form .overview-preview summary {
+  color: #ffd36a !important;
+}
+section.editor-panel .overview-preview pre,
+section.editor-panel .policy-form .overview-preview pre {
+  color: #fff8e8 !important;
+}
+section.editor-panel .button.secondary {
+  background: #17140d !important;
+  border-color: #c99a2e !important;
+  color: #fff8e8 !important;
+}
+
+
+/* FORCE FIX: use the actual editor classes from App.tsx, not guessed modal selectors */
+.editor-panel {
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .editor-top,
+.editor-panel .editor-top > div,
+.editor-panel .overview-form,
+.editor-panel .policy-form {
+  background: transparent !important;
+  color: #fff8e8 !important;
+}
+.editor-panel .editor-top h2,
+.editor-panel .editor-top .eyebrow {
+  color: #f2c45b !important;
+}
+.editor-panel .editor-top p {
+  color: #e7dfce !important;
+}
+.editor-panel > .field-label,
+.editor-panel .field-label {
+  color: #ffd36a !important;
+}
+.editor-panel input,
+.editor-panel select,
+.editor-panel textarea {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  caret-color: #ffd36a !important;
+  color-scheme: dark !important;
+}
+.editor-panel input::placeholder,
+.editor-panel textarea::placeholder {
+  color: #b8ad98 !important;
+  opacity: 1 !important;
+}
+.editor-panel select option {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+}
+.editor-panel select option:checked {
+  background-color: #76530d !important;
+  color: #ffffff !important;
+}
+.editor-panel .overview-form-intro,
+.editor-panel .overview-guidance {
+  background: #17140d !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .overview-form-intro b,
+.editor-panel .overview-guidance b {
+  color: #ffd36a !important;
+}
+.editor-panel .overview-form-intro p,
+.editor-panel .overview-guidance li {
+  color: #fff8e8 !important;
+}
+.editor-panel .overview-preview {
+  background: #11110f !important;
+  color: #ffd36a !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .overview-preview summary {
+  color: #ffd36a !important;
+}
+.editor-panel .overview-preview pre {
+  color: #fff8e8 !important;
+}
+.editor-panel .overview-form-grid .field-label,
+.editor-panel .policy-form .field-label {
+  color: #ffd36a !important;
+}
+
+
+/* Food Management Overview + Policy forms: consistent Small Kitchen black/gold theme */
+.editor-panel,
+.document-editor,
+.edit-document-modal,
+.modal-content {
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+}
+.editor-panel {
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .editor-top h2,
+.editor-panel .editor-top .eyebrow,
+.editor-panel .field-label,
+.editor-panel .overview-form-grid .field-label,
+.editor-panel .overview-form-intro b,
+.editor-panel .overview-guidance b,
+.editor-panel .overview-preview summary {
+  color: #ffd36a !important;
+}
+.editor-panel .editor-top p,
+.editor-panel .overview-form-intro p,
+.editor-panel .overview-guidance,
+.editor-panel .overview-guidance li {
+  color: #fff8e8 !important;
+}
+.editor-panel .overview-form-intro,
+.editor-panel .overview-guidance {
+  background: #17140d !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .overview-form input,
+.editor-panel .overview-form select,
+.editor-panel .overview-form textarea,
+.editor-panel .policy-form input,
+.editor-panel .policy-form select,
+.editor-panel .policy-form textarea,
+.editor-panel input,
+.editor-panel select,
+.editor-panel textarea {
+  background-color: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  caret-color: #ffd36a !important;
+  color-scheme: dark !important;
+}
+.editor-panel input::placeholder,
+.editor-panel textarea::placeholder {
+  color: #b8ad98 !important;
+  opacity: 1 !important;
+}
+.editor-panel select option {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+}
+.editor-panel select option:checked {
+  background: #76530d !important;
+  color: #ffffff !important;
+}
+.editor-panel .overview-preview {
+  background: #11110f !important;
+  border: 1px solid #c99a2e !important;
+  color: #ffd36a !important;
+}
+.editor-panel .overview-preview pre {
+  color: #fff8e8 !important;
+}
+
+
+/* Overview saved-information preview: Arial font and black/gold placement */
+.editor-panel .overview-preview,
+.editor-panel .overview-preview summary,
+.editor-panel .overview-preview pre {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.editor-panel .overview-preview {
+  margin: 0 0 18px 0 !important;
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .overview-preview summary {
+  color: #ffd36a !important;
+  font-weight: 700 !important;
+}
+.editor-panel .overview-preview pre {
+  color: #fff8e8 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  white-space: pre-wrap !important;
+}
+
+
+/* Food Safety Policy — saved information preview and black/gold form theme */
+.editor-panel .policy-form .overview-preview {
+  display: block !important;
+  margin: 0 0 18px 0 !important;
+  padding: 14px 16px !important;
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  border-radius: 12px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.editor-panel .policy-form .overview-preview summary {
+  color: #ffd36a !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+.editor-panel .policy-form .overview-preview pre {
+  color: #fff8e8 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+}
+.editor-panel .policy-form .overview-form-intro,
+.editor-panel .policy-form .overview-guidance {
+  background: #17140d !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .policy-form .overview-form-intro b,
+.editor-panel .policy-form .overview-guidance b,
+.editor-panel .policy-form .field-label {
+  color: #ffd36a !important;
+}
+.editor-panel .policy-form .overview-form-intro p,
+.editor-panel .policy-form .overview-guidance li {
+  color: #fff8e8 !important;
+}
+.editor-panel .policy-form input,
+.editor-panel .policy-form select,
+.editor-panel .policy-form textarea {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  color-scheme: dark !important;
+}
+.editor-panel .policy-form select option {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+}
+
+
+/* TARGETED CONTENT-AREA REPLACEMENT: Food Safety Policy document editor */
+.editor-panel {
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+}
+.editor-panel .editor-content,
+.editor-panel .editor-body,
+.editor-panel .editor-main,
+.editor-panel .editor-form-area {
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+}
+.editor-panel .policy-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  padding: 4px 0 !important;
+  background: #0b0b0a !important;
+  color: #fff8e8 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.editor-panel .policy-form .overview-preview {
+  order: -1 !important;
+  display: block !important;
+  margin: 0 0 4px 0 !important;
+  padding: 15px 17px !important;
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  border-radius: 10px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.editor-panel .policy-form .overview-preview summary {
+  color: #ffd36a !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+.editor-panel .policy-form .overview-preview pre {
+  margin-top: 12px !important;
+  color: #fff8e8 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+}
+.editor-panel .policy-form .overview-form-intro,
+.editor-panel .policy-form .overview-guidance {
+  background: #17140d !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  border-radius: 10px !important;
+  padding: 15px 17px !important;
+}
+.editor-panel .policy-form .overview-form-intro b,
+.editor-panel .policy-form .overview-guidance b,
+.editor-panel .policy-form .field-label {
+  color: #ffd36a !important;
+}
+.editor-panel .policy-form .overview-form-intro p,
+.editor-panel .policy-form .overview-guidance li {
+  color: #fff8e8 !important;
+  line-height: 1.5 !important;
+}
+.editor-panel .policy-form .overview-form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+.editor-panel .policy-form .field-label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 600 !important;
+}
+.editor-panel .policy-form input,
+.editor-panel .policy-form select,
+.editor-panel .policy-form textarea {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 10px 12px !important;
+  background: #11110f !important;
+  color: #fff8e8 !important;
+  border: 1px solid #c99a2e !important;
+  border-radius: 8px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px !important;
+  color-scheme: dark !important;
+}
+.editor-panel .policy-form textarea {
+  min-height: 92px !important;
+  resize: vertical !important;
+}
+.editor-panel .policy-form input::placeholder,
+.editor-panel .policy-form textarea::placeholder {
+  color: #b8ad98 !important;
+  opacity: 1 !important;
+}
+.editor-panel .policy-form select option {
+  background: #11110f !important;
+  color: #fff8e8 !important;
+}
+.editor-panel .policy-form select option:checked {
+  background: #76530d !important;
+  color: #ffffff !important;
+}
+@media (max-width: 700px) {
+  .editor-panel .policy-form .overview-form-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* Food Safety Policy editor: dark charcoal form controls with gold accents */
+.policy-form { background:#11110f !important; color:#f7f0df !important; border:1px solid #b88624 !important; border-radius:14px; padding:18px; }
+.policy-form .field-label { color:#f3d27b !important; }
+.policy-form input, .policy-form select, .policy-form textarea { background:#090909 !important; color:#fff8e8 !important; border:1px solid #b88624 !important; border-radius:8px; padding:11px 12px; }
+.policy-form select option { background:#171715; color:#fff8e8; }
+.policy-form input::placeholder, .policy-form textarea::placeholder { color:#c7c0b1 !important; }
+.policy-form .policy-saved-preview { background:#171715; border:1px solid #d6a637; border-radius:10px; padding:14px; margin:0 0 18px; font-family:Arial,sans-serif; color:#fff8e8; }
+.policy-form .policy-saved-preview h3 { margin:0 0 10px; color:#f3c75e; font:700 16px Arial,sans-serif; }
+.policy-form .policy-saved-preview pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:250px; overflow:auto; margin:0; font:13px/1.55 Arial,sans-serif; color:#fff8e8; }
+.policy-form .overview-form-intro { color:#f4eddd; }
+.policy-form .overview-form-intro b { color:#f3c75e; }
+
+.editor-panel .policy-form { background:#141412 !important; color:#fff8e8 !important; border:1px solid #c89b35 !important; border-radius:14px; padding:18px; }
+.editor-panel .policy-form .field-label { display:flex; flex-direction:column; gap:7px; color:#f4cf68 !important; }
+.editor-panel .policy-form input, .editor-panel .policy-form select, .editor-panel .policy-form textarea { box-sizing:border-box; width:100%; background:#080808 !important; color:#fff8e8 !important; border:1px solid #b88b2b !important; border-radius:8px; padding:11px 12px; font:14px/1.45 Arial,sans-serif; }
+.editor-panel .policy-form select option { background:#171715; color:#fff8e8; }
+.editor-panel .policy-form textarea { min-height:92px; resize:vertical; }
+.editor-panel .policy-form .policy-saved-preview { background:#1b1b18; border:1px solid #d0a23c; border-radius:10px; padding:14px; margin:0 0 18px; color:#fff8e8; font-family:Arial,sans-serif; }
+.editor-panel .policy-form .policy-saved-preview h3 { margin:0 0 10px; color:#f4cf68; font:700 16px Arial,sans-serif; }
+.editor-panel .policy-form .policy-saved-preview pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:250px; overflow:auto; margin:0; font:13px/1.55 Arial,sans-serif; color:#fff8e8; }
+
+/* Reference-matched policy document form: black/charcoal, gold labels, two-column fields */
+.editor-panel .policy-form {
+  display:block !important;
+  box-sizing:border-box;
+  background:#0b0b0a !important;
+  color:#fff8e8 !important;
+  border:1px solid #b88b22 !important;
+  border-radius:0 0 14px 14px;
+  padding:24px 30px 28px !important;
+  font-family:Arial,sans-serif;
+}
+.editor-panel .policy-form .overview-form-intro {
+  display:block;
+  margin:0 0 24px !important;
+  padding:20px 21px !important;
+  background:#171611 !important;
+  border:1px solid #c99b2e !important;
+  border-radius:17px !important;
+  color:#fff8e8 !important;
+  font:16px/1.55 Arial,sans-serif !important;
+}
+.editor-panel .policy-form .overview-form-intro b {
+  display:block;
+  margin-bottom:5px;
+  color:#f4c34f !important;
+  font:bold 17px Arial,sans-serif !important;
+}
+.editor-panel .policy-form .overview-form-grid {
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:28px 18px !important;
+  align-items:start;
+}
+.editor-panel .policy-form .field-label {
+  min-width:0;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:9px !important;
+  margin:0 0 0 !important;
+  color:#f4c34f !important;
+  font:bold 13px Arial,sans-serif !important;
+}
+.editor-panel .policy-form input,
+.editor-panel .policy-form select,
+.editor-panel .policy-form textarea {
+  box-sizing:border-box !important;
+  width:100% !important;
+  min-height:49px;
+  background:#111110 !important;
+  color:#fff8e8 !important;
+  border:1px solid #bd901f !important;
+  border-radius:13px !important;
+  padding:13px 15px !important;
+  font:13px/1.45 Arial,sans-serif !important;
+  outline-offset:2px;
+}
+.editor-panel .policy-form select { color-scheme:dark; }
+.editor-panel .policy-form select option { background:#171715 !important; color:#fff8e8 !important; }
+.editor-panel .policy-form textarea { min-height:104px; resize:vertical; }
+.editor-panel .policy-form input::placeholder,
+.editor-panel .policy-form textarea::placeholder { color:#d1c8b6 !important; opacity:1; }
+.editor-panel .policy-form .policy-saved-preview {
+  display:block;
+  margin:0 0 24px !important;
+  padding:18px 20px !important;
+  background:#171611 !important;
+  border:1px solid #c99b2e !important;
+  border-radius:15px !important;
+  color:#fff8e8 !important;
+  font-family:Arial,sans-serif !important;
+}
+.editor-panel .policy-form .policy-saved-preview h3 {
+  margin:0 0 12px !important;
+  color:#f4c34f !important;
+  font:bold 16px Arial,sans-serif !important;
+}
+.editor-panel .policy-form .policy-saved-preview pre {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  max-height:260px;
+  overflow:auto;
+  margin:0;
+  font:13px/1.55 Arial,sans-serif !important;
+  color:#fff8e8 !important;
+}
+.editor-panel .policy-form .overview-guidance {
+  margin-top:24px !important;
+  padding:17px 20px !important;
+  background:#171611 !important;
+  border:1px solid #8e6d20 !important;
+  border-radius:13px !important;
+  color:#f1ead9 !important;
+  font:14px/1.6 Arial,sans-serif !important;
+}
+@media (max-width:700px) {
+  .editor-panel .policy-form { padding:18px 14px 22px !important; }
+  .editor-panel .policy-form .overview-form-grid { grid-template-columns:minmax(0,1fr) !important; gap:20px !important; }
+}
