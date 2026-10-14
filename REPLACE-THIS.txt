@@ -1,0 +1,10 @@
+Food App build fix
+
+1. Replace your project's package.json with this package.json.
+2. Put src/vite-env.d.ts inside your project's src folder.
+3. In Command Prompt, from the project root, run:
+   npm install
+   npm run build
+
+This package.json adds the missing React TypeScript declarations. It keeps your existing scripts and runtime dependencies.
+Do not replace src/App.tsx with a blank file.
