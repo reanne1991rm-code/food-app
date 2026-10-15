@@ -1349,8 +1349,22 @@ function FinanceDashboard({ businessId, businessName }: { businessId: string; bu
   const [notes, setNotes] = useState('')
   const [filter, setFilter] = useState('all')
   const [notice, setNotice] = useState('')
+  const [sumupConfigured, setSumupConfigured] = useState(false)
+  const [sumupConnected, setSumupConnected] = useState(false)
+  const [sumupLoading, setSumupLoading] = useState(false)
   const csvInput = useRef<HTMLInputElement>(null)
   useEffect(() => { try { localStorage.setItem('bh-finance-v1-' + businessId, JSON.stringify(transactions)) } catch { setNotice('Browser storage is full. Export your records and remove large items to continue.') } }, [transactions, businessId])
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('sumup') === 'connected') setNotice('SumUp is connected. Refresh transactions to load card payments.')
+    if (query.get('sumup') === 'failed') setNotice('SumUp could not connect. Check the OAuth setup and try again.')
+    fetch('/api/sumup?action=status').then(response => response.ok ? response.json() : null).then(status => {
+      if (!status) return
+      setSumupConfigured(Boolean(status.configured)); setSumupConnected(Boolean(status.connected))
+      if (status.connected) void refreshSumUp()
+    }).catch(() => {})
+  }, [])
+
   const formatter = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' })
   const monthKeys = Array.from({ length: 6 }, (_, index) => {
     const value = new Date(); value.setDate(1); value.setMonth(value.getMonth() - 5 + index)
@@ -1365,6 +1379,42 @@ function FinanceDashboard({ businessId, businessName }: { businessId: string; bu
   const expenseTotal = transactions.filter(item => item.kind === 'expense').reduce((sum, item) => sum + item.amount, 0)
   const net = incomeTotal - expenseTotal
   const filteredTransactions = transactions.filter(item => filter === 'all' || item.kind === filter).slice().sort((a, b) => b.date.localeCompare(a.date))
+  async function refreshSumUp() {
+    setSumupLoading(true)
+    try {
+      const response = await fetch('/api/sumup?action=transactions')
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        if (response.status === 401) setSumupConnected(false)
+        setNotice(data.error || 'Could not retrieve SumUp transactions.')
+        return
+      }
+      const imported: FinanceTransaction[] = (data.transactions || []).flatMap((item: Record<string, unknown>) => {
+        const status = String(item.simple_status || item.status || '').toUpperCase()
+        if (!['SUCCESSFUL', 'PAID_OUT'].includes(status)) return []
+        const currency = String(item.currency || 'GBP').toUpperCase()
+        if (currency !== 'GBP') return []
+        const amountValue = Number(item.amount || 0) - Number(item.refunded_amount || 0)
+        if (!(amountValue > 0)) return []
+        const referenceValue = String(item.transaction_code || item.id || '')
+        const transactionDate = new Date(String(item.local_time || item.timestamp || item.date || ''))
+        const dateValue = Number.isNaN(transactionDate.getTime()) ? new Date().toISOString().slice(0, 10) : transactionDate.toISOString().slice(0, 10)
+        const device = item.device_info && typeof item.device_info === 'object' ? String((item.device_info as Record<string, unknown>).name || '') : ''
+        return [{ id: 'sumup-' + String(item.id || referenceValue), kind: 'income' as const, date: dateValue, amount: amountValue, description: String(item.product_summary || 'SumUp card payment'), category: 'Card sales', counterparty: device ? 'Reader ' + device : 'SumUp card reader', method: 'SumUp card reader', reference: referenceValue, notes: (status === 'PAID_OUT' ? 'Paid out' : 'Successful') + (Number(item.refunded_amount || 0) > 0 ? ' · partial refund recorded' : ''), source: 'sumup' as const }]
+      })
+      setTransactions(old => {
+        const oldByReference = new Set(old.filter(item => item.source === 'sumup').map(item => item.reference).filter(Boolean))
+        const fresh = imported.filter(item => !old.some(existing => existing.id === item.id) && (!item.reference || !oldByReference.has(item.reference)))
+        const importedIds = new Set(imported.map(item => item.id))
+        const importedRefs = new Set(imported.map(item => item.reference).filter(Boolean))
+        const retained = old.filter(item => item.source !== 'sumup' || (!importedIds.has(item.id) && (!item.reference || !importedRefs.has(item.reference))))
+        return [...fresh, ...retained]
+      })
+      setSumupConnected(true)
+      setNotice(imported.length + ' recent successful GBP card payments loaded from SumUp. Refresh again to check for updates.')
+    } catch { setNotice('Could not reach the SumUp connection. Please try again.') }
+    finally { setSumupLoading(false) }
+  }
   function saveTransaction(event: React.FormEvent) {
     event.preventDefault()
     const parsed = Number(amount)
@@ -1397,7 +1447,7 @@ function FinanceDashboard({ businessId, businessName }: { businessId: string; bu
   const categories = kind === 'expense' ? ['Food stock and ingredients','Packaging and disposables','Fuel and travel','Pitch / market / venue fees','Equipment and smallwares','Repairs and maintenance','Utilities','Insurance','Bank and card fees','Staff and payroll','Marketing','Other'] : ['Card sales','Cash sales','Bank transfer','Catering / event income','Refund received','Other income']
   return <div className="finance-page">
     <div className="page-heading-row safety-folder-page-heading"><div><div className="eyebrow">{businessName.toUpperCase()} · FINANCE</div><h1>Expenses &amp; Income</h1><p className="page-subtitle">Track money coming in and going out, review the trend, and keep a clear transaction history.</p></div><div className="page-heading-actions"><button className="button secondary" type="button" onClick={exportTransactions}><ArrowDownToLine size={16}/>Export CSV</button></div></div>
-    <section className="finance-connection panel"><div><span className="finance-status-dot"/><div><b>SumUp card reader</b><small>Not connected · Import a SumUp transaction CSV to add card payments</small></div></div><div className="finance-connection-actions"><button className="button secondary" type="button" onClick={() => csvInput.current?.click()}><ArrowUpFromLine size={16}/>Import SumUp CSV</button><input ref={csvInput} className="finance-file-input" type="file" accept=".csv,text/csv" onChange={importCsv}/><button className="text-link" type="button" onClick={() => setNotice('A live SumUp link needs a secure server-side OAuth connection and protected token storage. This browser-only app does not have that backend yet; no SumUp credentials are stored here.')}>Connection details</button></div></section>
+    <section className="finance-connection panel"><div><span className="finance-status-dot"/><div><b>SumUp card reader</b><small>{sumupConnected ? 'Connected · transaction history is available' : sumupConfigured ? 'Not connected · authorise SumUp to load card-reader sales' : 'Not configured · secure SumUp credentials are needed on the server'}</small></div></div><div className="finance-connection-actions">{sumupConfigured && <><button className="button primary" type="button" onClick={() => sumupConnected ? void refreshSumUp() : window.location.assign('/api/sumup?action=connect')} disabled={sumupLoading}>{sumupLoading ? 'Loading…' : sumupConnected ? 'Refresh SumUp' : 'Connect SumUp'}</button>{sumupConnected && <button className="text-link" type="button" onClick={() => { void fetch('/api/sumup?action=disconnect').then(() => { setSumupConnected(false); setNotice('SumUp disconnected from this browser.') }) }}>Disconnect</button>}</>}<button className="button secondary" type="button" onClick={() => csvInput.current?.click()}><ArrowUpFromLine size={16}/>Import SumUp CSV</button><input ref={csvInput} className="finance-file-input" type="file" accept=".csv,text/csv" onChange={importCsv}/><button className="text-link" type="button" onClick={() => setNotice(sumupConfigured ? 'SumUp uses secure OAuth. The app requests read-only transaction history and profile access, and keeps tokens in an encrypted, HttpOnly server cookie.' : 'To enable a live connection, register a SumUp OAuth app and configure SUMUP_CLIENT_ID, SUMUP_CLIENT_SECRET, SUMUP_REDIRECT_URI and SUMUP_SESSION_SECRET as Vercel environment variables. Never put credentials in this browser or public code.')}>Connection details</button></div></section>
     {notice && <div className="finance-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Dismiss message"><X size={16}/></button></div>}
     <section className="finance-summary-grid">
       <article className="finance-stat"><span>Total income</span><strong className="finance-income">{formatter.format(incomeTotal)}</strong><small>All recorded income</small></article>
