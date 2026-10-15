@@ -967,6 +967,26 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
     setToast('Import started. Small files are stored in this browser only; export a backup and connect cloud storage before relying on these records.')
   }
   function navigate(next: string) { setPage(next); setEditing(null); setMobileMenu(false); setSearch('') }
+  function closeEditor() {
+    const category = editing?.category || ''
+    let destination = 'documents'
+    if (category.startsWith(savedFormsPrefix)) {
+      const folder = category.slice(savedFormsPrefix.length)
+      setSelectedSavedFolder(savedFormFolders.includes(folder) ? folder : '')
+      destination = 'extras-folder'
+    } else {
+      setSelectedSavedFolder('')
+      if (category === 'Folder 1 — Food Safety Management') destination = 'safety-folder'
+      else if (category === foodHandlingCategory) destination = 'handling-folder'
+      else if (category === cleaningCategory) destination = 'cleaning-folder'
+      else if (category === transportCategory) destination = 'transport-folder'
+      else if (category === businessPaperworkCategory) destination = 'business-paperwork-folder'
+      else if (category === extrasCategory) destination = 'extras-folder'
+    }
+    setPage(destination)
+    setEditing(null)
+    setMobileMenu(false)
+  }
   const totalDone = safety.filter(s => s.done).length
 
   return <div className="app-shell">
@@ -1041,7 +1061,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
           </section>
         </>}
         {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name} onSaveTransaction={transaction => setDocs(old => [financeTransactionDocument(transaction, activeBusiness, active.name), ...old])}/>}
-        {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{isManagementPackDocument(editing) ? <ManagementPackEditor value={managementPackForm} onChange={setManagementPackForm}/> : (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
+        {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={closeEditor} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{isManagementPackDocument(editing) ? <ManagementPackEditor value={managementPackForm} onChange={setManagementPackForm}/> : (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
   <details className="overview-preview"><summary>Show the information that will be saved in the document</summary><pre>{overviewMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Complete the business details below</b><p>Use the dropdowns where available. If unsure, choose “To be confirmed” or leave the box blank rather than guessing.</p></div>
   <div className="overview-form-grid">
