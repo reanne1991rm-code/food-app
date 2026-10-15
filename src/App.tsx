@@ -1040,7 +1040,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             </div>
           </section>
         </>}
-        {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name} onSaveTransaction={transaction => setDocs(old => [financeTransactionDocument(transaction, activeBusiness), ...old])}/>}
+        {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name} onSaveTransaction={transaction => setDocs(old => [financeTransactionDocument(transaction, activeBusiness, active.name), ...old])}/>}
         {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{isManagementPackDocument(editing) ? <ManagementPackEditor value={managementPackForm} onChange={setManagementPackForm}/> : (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
   <details className="overview-preview"><summary>Show the information that will be saved in the document</summary><pre>{overviewMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Complete the business details below</b><p>Use the dropdowns where available. If unsure, choose “To be confirmed” or leave the box blank rather than guessing.</p></div>
@@ -1298,7 +1298,7 @@ function TrainingRecordsEditor({ value, onChange }: { value: TrainingRecordsForm
 }
 
 type FinanceTransaction = { id: string; kind: 'income' | 'expense'; date: string; amount: number; description: string; category: string; counterparty: string; method: string; reference: string; notes: string; source: 'manual' | 'sumup' }
-function financeTransactionDocument(transaction: FinanceTransaction, businessId: string): Doc {
+function financeTransactionDocument(transaction: FinanceTransaction, businessId: string, businessName: string): Doc {
   const isIncome = transaction.kind === 'income'
   const typeLabel = isIncome ? 'Income' : 'Expense'
   const folder = isIncome ? 'Saved Income Records' : 'Saved Expense Records'
@@ -1307,7 +1307,7 @@ function financeTransactionDocument(transaction: FinanceTransaction, businessId:
   const lines = [
     `# ${typeLabel} Record — ${transaction.description}`,
     '',
-    `**Business:** ${businessId}`,
+    `**Business:** ${businessName}`,
     `**Date:** ${dateLabel}`,
     `**Type:** ${typeLabel}`,
     `**Amount:** ${amountLabel}`,
@@ -1318,7 +1318,7 @@ function financeTransactionDocument(transaction: FinanceTransaction, businessId:
     `**Source:** ${transaction.source === 'sumup' ? 'SumUp' : 'Manual entry'}`,
     `**Notes:** ${transaction.notes || 'None'}`,
   ]
-  return { id: crypto.randomUUID(), businessId, title: `${typeLabel} Record — ${transaction.description} — ${dateLabel}`, category: `${savedFormsPrefix}${folder}`, content: lines.join('\\n'), updatedAt: new Date().toISOString(), type: 'record' }
+  return { id: crypto.randomUUID(), businessId, title: `${typeLabel} Record — ${transaction.description} — ${dateLabel}`, category: `${savedFormsPrefix}${folder}`, content: lines.join('\n'), updatedAt: new Date().toISOString(), type: 'record' }
 }
 function parseFinanceCsv(text: string): FinanceTransaction[] {
   const rows: string[][] = []
