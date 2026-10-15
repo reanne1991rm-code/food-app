@@ -861,8 +861,21 @@ section.editor-panel .button.secondary {
 .temperature-record-form .overview-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .temperature-record-form .overview-preview summary { cursor: pointer; color: #ffd36a; font-weight: 650; }
 .temperature-record-form .overview-preview pre { max-height: 320px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: #fff; font: 13px/1.6 Arial, sans-serif; }
+.opening-closing-form .overview-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.opening-check-section, .opening-issue-section { display: grid; gap: 12px; }
+.opening-check-section h3, .opening-issue-section h3 { margin: 0; color: #fff; font-size: 16px; }
+.opening-check-list { display: grid; gap: 10px; }
+.opening-check-row { display: grid; grid-template-columns: minmax(180px, 1.25fr) minmax(150px, .8fr) minmax(200px, 1.2fr) auto; align-items: end; gap: 12px; padding: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.035); }
+.opening-check-row .field-label { min-width: 0; margin: 0; }
+.opening-check-action textarea { min-height: 42px; }
+.opening-remove { align-self: center; color: #ffb5a8; }
+.opening-issue-section { padding: 15px; border: 1px solid rgba(255,255,255,.12); border-radius: 13px; background: rgba(255,255,255,.035); }
+.opening-issue-section .field-label { margin: 0; }
+.opening-closing-form .overview-preview summary { cursor: pointer; color: #ffd36a; font-weight: 650; }
+.opening-closing-form .overview-preview pre { max-height: 320px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: #fff; font: 13px/1.6 Arial, sans-serif; }
 @media (max-width: 760px) {
   .temperature-check-grid, .temperature-record-form .overview-form-grid { grid-template-columns: minmax(0, 1fr); }
   .temperature-action-field { grid-column: auto; }
   .temperature-check-list-heading { align-items: flex-start; flex-direction: column; }
+  .opening-closing-form .overview-form-grid, .opening-check-row { grid-template-columns: minmax(0, 1fr); }
 }
