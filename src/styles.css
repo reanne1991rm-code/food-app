@@ -900,6 +900,12 @@ section.editor-panel .button.secondary {
 .allergen-cross-contact { margin:0; }
 .allergen-matrix-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
 .allergen-matrix-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
+.allergen-management-form { display:grid; gap:17px; }
+.allergen-management-form > .management-pack-section { min-width:0; }
+.allergen-management-matrix > .allergen-matrix-form { padding:0; border:0; background:transparent; }
+.management-pack-help { margin:0; color:#bdc8c1; font-size:13px; }
+.allergen-management-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
+.allergen-management-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
 @media (max-width: 760px) {
   .temperature-check-grid, .temperature-record-form .overview-form-grid, .cleaning-record-form .overview-form-grid, .cleaning-record-grid, .management-pack-section .overview-form-grid, .allergen-matrix-meta, .allergen-item-fields, .allergen-verification-fields { grid-template-columns: minmax(0, 1fr); }
   .allergen-checkboxes { grid-template-columns:repeat(2,minmax(0,1fr)); }
