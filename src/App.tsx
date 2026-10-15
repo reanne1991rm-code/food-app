@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Archive, ArrowDownToLine, ArrowLeft, ArrowUpFromLine, Bell, BookOpenCheck, BriefcaseBusiness, Building2, Check, ChevronDown, ChevronRight, CircleHelp, ClipboardCheck, Cloud, File, FilePlus2, FileText, Folder, House, LayoutDashboard, Menu, MoreHorizontal, Pencil, Plus, Search, Settings, ShieldCheck, Sparkles, Users, Wifi, WifiOff, X } from 'lucide-react'
 
 type Business = { id: string; name: string; subtitle: string; icon: string; color: string }
-type Doc = { id: string; businessId: string; title: string; category: string; content: string; updatedAt: string; type: string; pinned?: boolean; fileData?: string; mimeType?: string; fileSize?: number; policyData?: PolicyForm; temperatureData?: TemperatureRecordForm; temperatureMonitoringData?: TemperatureRecordForm; openingClosingData?: OpeningClosingForm; cleaningData?: CleaningRecordForm; supplierDeliveryData?: SupplierDeliveryForm; storageRotationData?: StorageRotationForm; foodProcessData?: FoodProcessForm; hygienePolicyData?: HygienePolicyForm; managementPackData?: ManagementPackForm; allergenMatrixData?: AllergenMatrixForm; allergenManagementData?: AllergenManagementForm; pestWasteWaterData?: PestWasteWaterForm; trainingRecordsData?: TrainingRecordsForm; documentReviewData?: DocumentReviewForm; preparationRecordsData?: PreparationRecordsForm; sanitiserLogData?: SanitiserLogForm; equipmentChecksData?: EquipmentChecksForm; transportLogsData?: TransportLogsForm; businessRegistrationData?: BusinessRegistrationForm; permissionsLicencesData?: PermissionsLicencesForm; insuranceRecordsData?: InsuranceRecordsForm; correspondenceLogData?: CorrespondenceLogForm; businessDetailsData?: BusinessDetailsForm; usefulResourcesData?: UsefulResourcesForm }
+type Doc = { id: string; businessId: string; title: string; category: string; content: string; updatedAt: string; type: string; pinned?: boolean; fileData?: string; mimeType?: string; fileSize?: number; policyData?: PolicyForm; temperatureData?: TemperatureRecordForm; temperatureMonitoringData?: TemperatureRecordForm; openingClosingData?: OpeningClosingForm; cleaningData?: CleaningRecordForm; supplierDeliveryData?: SupplierDeliveryForm; storageRotationData?: StorageRotationForm; foodProcessData?: FoodProcessForm; hygienePolicyData?: HygienePolicyForm; managementPackData?: ManagementPackForm; allergenMatrixData?: AllergenMatrixForm; allergenManagementData?: AllergenManagementForm; pestWasteWaterData?: PestWasteWaterForm; trainingRecordsData?: TrainingRecordsForm; documentReviewData?: DocumentReviewForm; preparationRecordsData?: PreparationRecordsForm; sanitiserLogData?: SanitiserLogForm; equipmentChecksData?: EquipmentChecksForm; transportLogsData?: TransportLogsForm; businessRegistrationData?: BusinessRegistrationForm; permissionsLicencesData?: PermissionsLicencesForm; insuranceRecordsData?: InsuranceRecordsForm; correspondenceLogData?: CorrespondenceLogForm; businessDetailsData?: BusinessDetailsForm; usefulResourcesData?: UsefulResourcesForm; editorType?: string }
 type SafetyItem = { id: string; title: string; detail: string; done: boolean }
 
 const businesses: Business[] = [
@@ -314,9 +314,10 @@ const emptyPolicyForm: PolicyForm = {
 }
 
 function isPolicyDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
   const content = doc.content.trimStart().toLowerCase()
-  return Boolean(doc.policyData) || doc.id === 'fs2' || doc.id === 'fs2-v2' || title.includes('food safety policy and responsibilities') ||
+  return doc.editorType === 'policy' || Boolean(doc.policyData) || doc.id === 'fs2' || doc.id === 'fs2-v2' || title.includes('food safety policy and responsibilities') ||
     (doc.category.toLowerCase().includes('food safety') && (content.startsWith('# food safety policy and responsibilities') || content.includes('## 1. food safety policy') || content.includes('**food safety lead:**')))
 }
 
@@ -385,10 +386,12 @@ function migratePolicyDocumentDocs(docs: Doc[]): Doc[] {
 }
 
 function isDailyTemperatureDocument(doc: Doc) {
-  return Boolean(doc.temperatureData) || doc.id === 'fs3' || doc.title.trim().toLowerCase() === 'daily temperature records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'daily-temperature' || Boolean(doc.temperatureData) || doc.id === 'fs3' || doc.title.trim().toLowerCase() === 'daily temperature records'
 }
 function isTemperatureMonitoringLog(doc: Doc) {
-  return Boolean(doc.temperatureMonitoringData) || doc.id === 'd3' || doc.title.trim().toLowerCase() === 'temperature monitoring log'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'temperature-monitoring' || Boolean(doc.temperatureMonitoringData) || doc.id === 'd3' || doc.title.trim().toLowerCase() === 'temperature monitoring log'
 }
 function temperatureMonitoringFormFromDocument(doc: Doc): TemperatureRecordForm {
   if (doc.temperatureMonitoringData) return { ...emptyTemperatureRecord, ...doc.temperatureMonitoringData, checks: doc.temperatureMonitoringData.checks?.length ? doc.temperatureMonitoringData.checks.map(check => ({ ...blankTemperatureCheck(), ...check })) : [blankTemperatureCheck()] }
@@ -433,8 +436,9 @@ function temperatureRecordMarkdown(form: TemperatureRecordForm, title = 'Daily T
 }
 
 function isDailyOpeningClosingDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
-  return Boolean(doc.openingClosingData) || doc.id === 'd2' || doc.id === 'fs11' || title === 'daily opening & closing checks' || title === 'opening and closing checklists'
+  return doc.editorType === 'opening-closing' || Boolean(doc.openingClosingData) || doc.id === 'd2' || doc.id === 'fs11' || title === 'daily opening & closing checks' || title === 'opening and closing checklists'
 }
 
 function openingClosingFormFromDocument(doc: Doc): OpeningClosingForm {
@@ -458,7 +462,8 @@ function openingClosingMarkdown(form: OpeningClosingForm) {
 }
 
 function isInsuranceRecordsDocument(doc: Doc) {
-  return Boolean(doc.insuranceRecordsData) || doc.id === 'fs21' || doc.title.trim().toLowerCase() === 'insurance records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'insurance' || Boolean(doc.insuranceRecordsData) || doc.id === 'fs21' || doc.title.trim().toLowerCase() === 'insurance records'
 }
 function insuranceRecordsFromDocument(doc: Doc): InsuranceRecordsForm {
   if (doc.insuranceRecordsData) return { ...doc.insuranceRecordsData, entries: doc.insuranceRecordsData.entries.map(entry => ({ ...blankInsuranceRecordEntry(), ...entry })) }
@@ -471,7 +476,8 @@ function insuranceRecordsMarkdown(form: InsuranceRecordsForm) {
   return `# Insurance Records\n\n| Policy type | Insurer / broker | Policy number | Cover starts | Cover ends | Renewal date | Business / activity covered | Status | Conditions / notes | Contact details | Evidence location | Claim / follow-up action | Responsible person |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Record policy details from current insurance documents. Check cover, exclusions and renewal dates with the insurer or broker, and store current documents securely.`
 }
 function isUsefulResourcesDocument(doc: Doc) {
-  return Boolean(doc.usefulResourcesData) || doc.id === 'fs24' || /useful resources register/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'useful-resources' || Boolean(doc.usefulResourcesData) || doc.id === 'fs24' || /useful resources register/i.test(doc.title)
 }
 function usefulResourcesFromDocument(doc: Doc): UsefulResourcesForm {
   if (doc.usefulResourcesData) return { ...doc.usefulResourcesData, entries: doc.usefulResourcesData.entries?.length ? doc.usefulResourcesData.entries.map(entry => ({ ...blankUsefulResourceEntry(), ...entry })) : [blankUsefulResourceEntry()] }
@@ -484,7 +490,8 @@ function usefulResourcesMarkdown(form: UsefulResourcesForm) {
   return '# Useful Resources Register\n\n| Resource / guidance title | Topic | Publisher / organisation | Source type | Link or file location | Date checked | Relevant section / notes | Next review date | Status | Checked by |\n|---|---|---|---|---|---|---|---|---|---|\n' + tableRows + '\n\n' + (form.notes ? '## Additional notes\n' + form.notes + '\n\n' : '') + 'Use trusted, current sources that apply to your business. Record where each resource came from, when it was checked and when it should next be reviewed.'
 }
 function isBusinessDetailsDocument(doc: Doc) {
-  return Boolean(doc.businessDetailsData) || doc.id === 'fs23' || /business details and key contacts form/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'business-details' || Boolean(doc.businessDetailsData) || doc.id === 'fs23' || /business details and key contacts form/i.test(doc.title)
 }
 function businessDetailsFromDocument(doc: Doc): BusinessDetailsForm {
   if (doc.businessDetailsData) return { ...emptyBusinessDetailsForm, ...doc.businessDetailsData }
@@ -520,7 +527,8 @@ function businessDetailsMarkdown(form: BusinessDetailsForm) {
   ].filter(Boolean).join('\n')
 }
 function isCorrespondenceLogDocument(doc: Doc) {
-  return Boolean(doc.correspondenceLogData) || doc.id === 'fs22' || /council and business correspondence log/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'correspondence' || Boolean(doc.correspondenceLogData) || doc.id === 'fs22' || /council and business correspondence log/i.test(doc.title)
 }
 function correspondenceLogFromDocument(doc: Doc): CorrespondenceLogForm {
   if (doc.correspondenceLogData) return { ...doc.correspondenceLogData, entries: doc.correspondenceLogData.entries?.length ? doc.correspondenceLogData.entries.map(entry => ({ ...blankCorrespondenceEntry(), ...entry })) : [blankCorrespondenceEntry()] }
@@ -533,7 +541,8 @@ function correspondenceLogMarkdown(form: CorrespondenceLogForm) {
   return `# Council and Business Correspondence Log\n\n| Date received / sent | Direction | Channel | Authority / organisation | Contact / department | Subject | Reference | Response due | Status | Action required | Responsible person | Date completed | Evidence location |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Log material correspondence about registration, permissions, inspections, insurance or business administration. Record deadlines and follow-up actions, and keep original emails or letters in the stated secure location.`
 }
 function isPermissionsLicencesDocument(doc: Doc) {
-  return Boolean(doc.permissionsLicencesData) || doc.id === 'fs20' || doc.title.trim().toLowerCase() === 'permissions and licences register'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'permissions-licences' || Boolean(doc.permissionsLicencesData) || doc.id === 'fs20' || doc.title.trim().toLowerCase() === 'permissions and licences register'
 }
 function permissionsLicencesFromDocument(doc: Doc): PermissionsLicencesForm {
   if (doc.permissionsLicencesData) return { ...doc.permissionsLicencesData, entries: doc.permissionsLicencesData.entries.map(entry => ({ ...blankPermissionLicenceEntry(), ...entry })) }
@@ -546,7 +555,8 @@ function permissionsLicencesMarkdown(form: PermissionsLicencesForm) {
   return `# Permissions and Licences Register\n\n| Permission / licence | Issuing authority | Activity / location | Application reference | Conditions / restrictions | Applied | Granted | Expiry / renewal | Status | Evidence location | Follow-up action | Responsible person |\n|---|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Record each permission, licence, consent or approval relevant to the operation. Verify requirements and conditions with the issuing authority, and keep current supporting documents and renewal deadlines.`
 }
 function isBusinessRegistrationDocument(doc: Doc) {
-  return Boolean(doc.businessRegistrationData) || doc.id === 'fs19' || doc.title.trim().toLowerCase() === 'business registration records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'business-registration' || Boolean(doc.businessRegistrationData) || doc.id === 'fs19' || doc.title.trim().toLowerCase() === 'business registration records'
 }
 function businessRegistrationFromDocument(doc: Doc): BusinessRegistrationForm {
   if (doc.businessRegistrationData) return { ...doc.businessRegistrationData, entries: doc.businessRegistrationData.entries.map(entry => ({ ...blankBusinessRegistrationEntry(), ...entry })) }
@@ -559,7 +569,8 @@ function businessRegistrationMarkdown(form: BusinessRegistrationForm) {
   return `# Business Registration Records\n\n| Registration type | Registering authority | Application / reference | Submitted | Registration date | Renewal / review | Status | Evidence location | Follow-up action | Responsible person |\n|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Record registrations relevant to the business, reference details, dates, status and where supporting evidence is stored. Confirm requirements and deadlines with the relevant authority.`
 }
 function isTransportLogsDocument(doc: Doc) {
-  return Boolean(doc.transportLogsData) || doc.id === 'fs18' || doc.title.trim().toLowerCase() === 'transport logs'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'transport' || Boolean(doc.transportLogsData) || doc.id === 'fs18' || doc.title.trim().toLowerCase() === 'transport logs'
 }
 function transportLogsFromDocument(doc: Doc): TransportLogsForm {
   if (doc.transportLogsData) return { ...doc.transportLogsData, entries: doc.transportLogsData.entries.map(entry => ({ ...blankTransportLogEntry(), ...entry })) }
@@ -572,7 +583,8 @@ function transportLogsMarkdown(form: TransportLogsForm) {
   return `# Transport Logs\n\n| Date | Food / batch | Batch details | Dispatch time | Dispatch location | Arrival time | Arrival location | Vehicle / container | Dispatch check | Arrival check | Required limit | Condition | Decision | Action | Checked by |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Protect food from contamination during transport. Use suitable, clean transport equipment and record the checks required by your food safety procedures. Record actual checks and actions taken.`
 }
 function isEquipmentChecksDocument(doc: Doc) {
-  return Boolean(doc.equipmentChecksData) || doc.id === 'fs16' || doc.title.trim().toLowerCase() === 'equipment checks and maintenance records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'equipment-checks' || Boolean(doc.equipmentChecksData) || doc.id === 'fs16' || doc.title.trim().toLowerCase() === 'equipment checks and maintenance records'
 }
 function equipmentChecksFromDocument(doc: Doc): EquipmentChecksForm {
   if (doc.equipmentChecksData) return { ...doc.equipmentChecksData, entries: doc.equipmentChecksData.entries.map(entry => ({ ...blankEquipmentCheckEntry(), ...entry })) }
@@ -585,7 +597,8 @@ function equipmentChecksMarkdown(form: EquipmentChecksForm) {
   return `# Equipment Checks and Maintenance Records\n\n| Date | Time | Equipment / asset | ID / location | Condition | Safe to use? | Fault / damage | Removed from use? | Repair / action | Checked by | Follow-up verification |\n|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Check equipment that could affect food safety, cleanliness or safe operation. Do not use damaged or unsafe equipment. Record the issue, immediate control, repair and how return to service was verified.`
 }
 function isSanitiserLogDocument(doc: Doc) {
-  return Boolean(doc.sanitiserLogData) || doc.id === 'fs15' || doc.title.trim().toLowerCase() === 'sanitiser use logs'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'sanitiser' || Boolean(doc.sanitiserLogData) || doc.id === 'fs15' || doc.title.trim().toLowerCase() === 'sanitiser use logs'
 }
 function sanitiserLogFromDocument(doc: Doc): SanitiserLogForm {
   if (doc.sanitiserLogData) return { ...doc.sanitiserLogData, entries: doc.sanitiserLogData.entries.map(entry => ({ ...blankSanitiserLogEntry(), ...entry })) }
@@ -598,7 +611,8 @@ function sanitiserLogMarkdown(form: SanitiserLogForm) {
   return `# Sanitiser Use Logs\n\n**Date:** ${form.date || 'To be completed'}\n\n| Time | Area / equipment | Sanitiser product | Dilution / concentration | Contact time | Method / check | Result | Corrective action | Completed by |\n|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Use a food-safe product suitable for the surface. Follow the label for dilution, application, contact time and rinsing. Record checks and actions when they happen.`
 }
 function isCleaningRecordDocument(doc: Doc) {
-  return Boolean(doc.cleaningData) || doc.id === 'fs4' || doc.title.trim().toLowerCase() === 'cleaning and disinfection schedule and records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'cleaning' || Boolean(doc.cleaningData) || doc.id === 'fs4' || doc.title.trim().toLowerCase() === 'cleaning and disinfection schedule and records'
 }
 function cleaningRecordFromDocument(doc: Doc): CleaningRecordForm {
   if (doc.cleaningData) return { ...emptyCleaningRecordForm, ...doc.cleaningData, records: doc.cleaningData.records?.length ? doc.cleaningData.records.map(row => ({ ...blankCleaningRecord(), ...row })) : [blankCleaningRecord()] }
@@ -618,7 +632,8 @@ function cleaningRecordMarkdown(form: CleaningRecordForm) {
   return `# Cleaning and Disinfection Schedule and Records\n\n**Date:** ${form.date || 'To be completed'}\n\n| Area / item | Product and dilution (follow label) | Method / contact time | Frequency | Status | Completed by | Checked by | Issue / action |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n${rows.map(r => `| ${r.area} | ${r.product} | ${r.method} | ${r.frequency} | ${r.status} | ${r.completedBy} | ${r.checkedBy} | ${r.issue} |`).join('\n')}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Include food-contact surfaces, utensils, cooker/fryer, fridge handles and shelves, warmer, sinks, handwashing points, floors, bins, storage and vehicle touchpoints as applicable. Remove visible soil first, then disinfect food-contact surfaces with a suitable product following the label dilution and contact time. Keep chemicals away from food and utensils. Record the real task, any issue and corrective action.`
 }
 function isPestWasteWaterDocument(doc: Doc) {
-  return Boolean(doc.pestWasteWaterData) || doc.id === 'fs10' || /pest control, waste and water safety records/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'pest-waste-water' || Boolean(doc.pestWasteWaterData) || doc.id === 'fs10' || /pest control, waste and water safety records/i.test(doc.title)
 }
 function pestWasteWaterFromDocument(doc: Doc): PestWasteWaterForm {
   if (doc.pestWasteWaterData) return { ...emptyPestWasteWaterForm, ...doc.pestWasteWaterData, records: doc.pestWasteWaterData.records?.length ? doc.pestWasteWaterData.records.map(row => ({ ...blankPestWasteWaterRecord(), ...row })) : [blankPestWasteWaterRecord()] }
@@ -630,7 +645,8 @@ function pestWasteWaterMarkdown(form: PestWasteWaterForm) {
   return `# Pest Control, Waste and Water Safety Records\n\n| Date | Record type | Location / system | Findings / condition | Status | Action / service details | Water source | Potable water confirmed | Tank cleaning / disinfection / refill | Fresh / wastewater separation | Responsible | Follow-up date | Verified by |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${records.map(row => `| ${[row.date, row.recordType, row.location, row.findings, row.status, row.action, row.waterSource, row.potable, row.tankService, row.separationCheck, row.responsible, row.followUpDate, row.verifiedBy].map(clean).join(' | ')} |`).join('\n')}\n\n${form.notes.trim() ? `## Additional notes\n\n${form.notes.trim()}\n\n` : ''}Record actual inspections, issues, actions, visits and checks. Protect food and food-contact equipment from pests and waste. Use potable water for food handling and handwashing; do not use water of uncertain safety. Keep fresh and wastewater separate and record tank cleaning and disinfection as applicable. Adapt checks to the actual water system and local requirements.`
 }
 function isTrainingRecordsDocument(doc: Doc) {
-  return Boolean(doc.trainingRecordsData) || doc.id === 'fs13' || /food safety training records/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'training' || Boolean(doc.trainingRecordsData) || doc.id === 'fs13' || /food safety training records/i.test(doc.title)
 }
 function trainingRecordsFromDocument(doc: Doc): TrainingRecordsForm {
   if (doc.trainingRecordsData) return { ...emptyTrainingRecordsForm, ...doc.trainingRecordsData, records: doc.trainingRecordsData.records?.length ? doc.trainingRecordsData.records.map(row => ({ ...blankTrainingRecord(), ...row })) : [blankTrainingRecord()] }
@@ -642,7 +658,8 @@ function trainingRecordsMarkdown(form: TrainingRecordsForm) {
   return `# Food Safety Training Records\n\n| Staff member | Role | Training / instruction | Status | Date completed | Trainer / provider | Evidence / certificate location | Refresher due | Additional support needed | Signature / acknowledgement |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n${rows.map(row => `| ${[row.staffMember, row.role, row.training, row.status, row.dateCompleted, row.trainer, row.evidence, row.refresherDue, row.support, row.acknowledgement].map(clean).join(' | ')} |`).join('\\n')}\n\n${form.notes.trim() ? `## Additional notes\n\n${form.notes.trim()}\n\n` : ''}Assign instruction to the tasks each person performs. Record completion only when the training or briefing has taken place, and keep certificates or other evidence at the location stated. Identify supervision or further support needed and review training when duties, procedures or equipment change. This log is a record of instruction; it does not by itself certify competence.`
 }
 function isDocumentReviewLog(doc: Doc) {
-  return Boolean(doc.documentReviewData) || doc.id === 'fs14' || /document review and update log/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'document-review' || Boolean(doc.documentReviewData) || doc.id === 'fs14' || /document review and update log/i.test(doc.title)
 }
 function documentReviewFromDocument(doc: Doc): DocumentReviewForm {
   if (doc.documentReviewData) return { ...emptyDocumentReviewForm, ...doc.documentReviewData, records: doc.documentReviewData.records?.length ? doc.documentReviewData.records.map(row => ({ ...blankDocumentReviewRecord(), ...row })) : [blankDocumentReviewRecord()] }
@@ -658,8 +675,9 @@ function documentReviewMarkdown(form: DocumentReviewForm) {
   return [header, ...data, '', ...notes, '', guidance].join('\n')
 }
 function isSupplierDeliveryDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
-  return Boolean(doc.supplierDeliveryData) || doc.id === 'fs6' || title === 'supplier and delivery records'
+  return doc.editorType === 'supplier-delivery' || Boolean(doc.supplierDeliveryData) || doc.id === 'fs6' || title === 'supplier and delivery records'
 }
 function supplierDeliveryFromDocument(doc: Doc): SupplierDeliveryForm {
   if (doc.supplierDeliveryData) return { ...emptySupplierDeliveryForm, ...doc.supplierDeliveryData, records: doc.supplierDeliveryData.records?.length ? doc.supplierDeliveryData.records.map(row => ({ ...blankSupplierDelivery(), ...row })) : [blankSupplierDelivery()] }
@@ -686,8 +704,9 @@ function supplierDeliveryMarkdown(form: SupplierDeliveryForm) {
   return `# Supplier and Delivery Records\n\n**Date:** ${form.date || 'To be completed'}\n\n${line(['Time', 'Supplier', 'Product', 'Quantity', 'Batch / use-by / traceability', 'Packaging / condition', 'Temperature (where required)', 'Decision', 'Issue / action', 'Checked by'])}\n${line(Array(10).fill('---'))}\n${rows.map(row => line([row.time, row.supplier, row.product, row.quantity, row.batchUseBy, row.condition, row.temperature, row.decision, row.issueAction, row.checkedBy])).join('\n')}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Check deliveries against the business's documented acceptance criteria. Record actual observations and any temperature only where required by the product and procedure. Keep invoices and traceability details. Reject or isolate goods that are unsafe, damaged, contaminated or outside the criteria; record the reason, action, supplier contact and follow-up. Do not guess or backdate records.`
 }
 function isStorageRotationDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
-  return Boolean(doc.storageRotationData) || doc.id === 'fs7' || title === 'food storage and stock rotation records'
+  return doc.editorType === 'storage-rotation' || Boolean(doc.storageRotationData) || doc.id === 'fs7' || title === 'food storage and stock rotation records'
 }
 function storageRotationFromDocument(doc: Doc): StorageRotationForm {
   if (doc.storageRotationData) return { ...emptyStorageRotationForm, ...doc.storageRotationData, records: doc.storageRotationData.records?.length ? doc.storageRotationData.records.map(row => ({ ...blankStorageRotationRecord(), ...row })) : [blankStorageRotationRecord()] }
@@ -711,7 +730,8 @@ function storageRotationMarkdown(form: StorageRotationForm) {
   return `# Food Storage and Stock Rotation Records\n\n**Date:** ${form.date || 'To be completed'}\n\n${line(['Product', 'Batch / use-by date', 'Storage location', 'Date opened / prepared', 'Rotation check', 'Discard date / action', 'Initials'])}\n${line(Array(7).fill('---'))}\n${rows.map(row => line([row.product, row.batchUseBy, row.location, row.openedPrepared, row.rotation, row.discardAction, row.initials])).join('\n')}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Store food covered, labelled and under the conditions required for the product. Keep raw foods separate from ready-to-eat foods and chemicals separate from food. Follow use-by dates and after-opening instructions, rotate stock so older suitable stock is used first, and discard food when safety cannot be assured. Record real checks and actions; do not guess or backdate.`
 }
 function isFoodPreparationRecordDocument(doc: Doc) {
-  return Boolean(doc.preparationRecordsData) || doc.id === 'fs17' || doc.title.trim().toLowerCase() === 'food preparation records'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'preparation-records' || Boolean(doc.preparationRecordsData) || doc.id === 'fs17' || doc.title.trim().toLowerCase() === 'food preparation records'
 }
 function preparationRecordsFromDocument(doc: Doc): PreparationRecordsForm {
   if (doc.preparationRecordsData) return { ...doc.preparationRecordsData, checks: doc.preparationRecordsData.checks.map(check => ({ ...blankPreparationCheck(), ...check })) }
@@ -719,7 +739,8 @@ function preparationRecordsFromDocument(doc: Doc): PreparationRecordsForm {
   return { ...emptyPreparationRecordsForm, notes: doc.content.trim() === starter ? '' : doc.content }
 }
 function isFoodProcessDocument(doc: Doc) {
-  return Boolean(doc.foodProcessData) || doc.id === 'fs8' || doc.title.trim().toLowerCase() === 'food preparation, cooking, cooling and reheating procedures'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'food-process' || Boolean(doc.foodProcessData) || doc.id === 'fs8' || doc.title.trim().toLowerCase() === 'food preparation, cooking, cooling and reheating procedures'
 }
 function foodProcessFromDocument(doc: Doc): FoodProcessForm {
   if (doc.foodProcessData) {
@@ -746,7 +767,8 @@ function foodProcessMarkdown(form: FoodProcessForm) {
   return `# Food Preparation, Cooking, Cooling and Reheating Procedures\n\n**Business:** ${form.business || 'To be completed'}  \n**Responsible person:** ${form.responsible || 'To be confirmed'}  \n**Review date:** ${form.reviewDate || 'To be set'}\n\n${section('Preparation', form.preparation)}\n\n${section('Cooking', form.cooking)}\n\n${section('Cooling', form.cooling)}\n\n${section('Reheating', form.reheating)}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Use clean hands, utensils and equipment; keep raw and ready-to-eat foods separate and avoid cross-contamination. Apply methods and limits that match the actual food, equipment and process. Use a cleaned and disinfected probe where required and record real checks and corrective actions. Review this procedure when recipes, suppliers, equipment or working methods change.`
 }
 function isHygienePolicyDocument(doc: Doc) {
-  return Boolean(doc.hygienePolicyData) || doc.id === 'fs9' || /personal hygiene and staff illness policy/i.test(doc.title)
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'hygiene-policy' || Boolean(doc.hygienePolicyData) || doc.id === 'fs9' || /personal hygiene and staff illness policy/i.test(doc.title)
 }
 function hygienePolicyFromDocument(doc: Doc): HygienePolicyForm {
   if (doc.hygienePolicyData) return { ...emptyHygienePolicyForm, ...doc.hygienePolicyData }
@@ -762,7 +784,8 @@ function hygienePolicyMarkdown(form: HygienePolicyForm) {
   return `# Personal Hygiene and Staff Illness Policy\n\n**Business:** ${form.business || 'To be completed'}  \n**Person responsible:** ${form.responsible || 'To be confirmed'}  \n**Review date:** ${form.reviewDate || 'To be set'}\n\n${section('Handwashing', form.handwashing, emptyHygienePolicyForm.handwashing)}\n\n${section('Work clothing and personal hygiene', `${form.clothing.trim()}\n\n${form.hygiene.trim()}`, emptyHygienePolicyForm.clothing)}\n\n${section('Cuts, wounds and skin infections', form.wounds, emptyHygienePolicyForm.wounds)}\n\n${section('Illness and symptom reporting', form.symptoms, emptyHygienePolicyForm.symptoms)}\n\n${field('How to report', form.reportingRoute)}\n\n${section('Exclusion and food handling', form.exclusion, emptyHygienePolicyForm.exclusion)}\n\n${section('Return to work', form.returnToWork, emptyHygienePolicyForm.returnToWork)}\n\n${section('Fitness-to-work assessment and decision record', form.assessment, emptyHygienePolicyForm.assessment)}\n\n${section('Staff briefing and training', form.training, emptyHygienePolicyForm.training)}\n\n${section('Records and confidentiality', form.records, emptyHygienePolicyForm.records)}\n\n${form.notes.trim() ? `## Additional notes\n\n${form.notes.trim()}\n\n` : ''}Use current Food Standards Agency and local authority guidance. This starter policy must be reviewed against the actual operation and any illness-specific advice; it is not medical advice or a completed compliance record.`
 }
 function isManagementPackDocument(doc: Doc) {
-  return Boolean(doc.managementPackData) || doc.id === 'd1' || doc.title.trim().toLowerCase() === 'food safety management pack'
+  if (doc.editorType === 'text') return false
+  return doc.editorType === 'management-pack' || Boolean(doc.managementPackData) || doc.id === 'd1' || doc.title.trim().toLowerCase() === 'food safety management pack'
 }
 function managementPackFormFromDocument(doc: Doc): ManagementPackForm {
   if (doc.managementPackData) return { ...emptyManagementPackForm, ...doc.managementPackData }
@@ -776,8 +799,9 @@ function managementPackMarkdown(form: ManagementPackForm) {
   return `# Food Safety Management Pack\n\n**Business:** ${form.business || 'To be completed'}  \n**Food safety lead:** ${form.responsible || 'To be confirmed'}  \n**Deputy / cover:** ${form.deputy || 'To be confirmed'}  \n**Review frequency:** ${form.reviewFrequency}  \n**Next review date:** ${form.reviewDate || 'Set a review date'}\n\n${section('Business and food operation', form.operation)}\n\n${section('Menu and food handled', form.menu)}\n\n${section('Preparation and process controls', form.preparation)}\n\n${section('Cross-contamination prevention', form.crossContamination)}\n\n${section('Temperature control', form.temperature)}\n\n${section('Cleaning and disinfection', form.cleaning)}\n\n${section('Allergen management', form.allergens)}\n\n${section('Deliveries and suppliers', form.deliveries)}\n\n${section('Food storage and stock rotation', form.storage)}\n\n${section('Personal hygiene and illness reporting', form.illness)}\n\n${section('Corrective action and incidents', form.correctiveActions)}\n\n${section('Training and supervision', form.training)}\n\n${section('Supporting records and where kept', form.records)}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}This is a working starter pack, not a completed or approved food safety system. Adapt it to the actual menu, premises, equipment, processes and current Food Standards Agency guidance. Record real checks and actions; do not guess or backdate records.`
 }
 function isAllergenMatrixDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
-  return Boolean(doc.allergenMatrixData) || doc.id === 'd4' || title === 'allergen matrix — menu' || title === 'allergen matrix - menu'
+  return doc.editorType === 'allergen-matrix' || Boolean(doc.allergenMatrixData) || doc.id === 'd4' || title === 'allergen matrix — menu' || title === 'allergen matrix - menu'
 }
 function allergenMatrixFromDocument(doc: Doc): AllergenMatrixForm {
   if (doc.allergenMatrixData) return { ...emptyAllergenMatrix, ...doc.allergenMatrixData, items: doc.allergenMatrixData.items?.length ? doc.allergenMatrixData.items.map(item => ({ ...blankAllergenMenuItem(), ...item, allergens: item.allergens || [] })) : [blankAllergenMenuItem()] }
@@ -809,8 +833,9 @@ function allergenMatrixMarkdown(form: AllergenMatrixForm) {
   return `# Allergen Matrix — Menu\n\n**Business:** ${form.business || 'To be completed'}  \n**Last reviewed:** ${form.lastReviewed || 'To be confirmed'}\n\n${line(header)}\n${line(header.map(() => '---'))}\n${markdownRows.map(line).join('\n')}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Verify each recipe and every current supplier label, including substitutions and relevant processing aids. Mark only allergens confirmed as present in the dish. Record cross-contact controls separately; do not claim a dish is allergen-free unless this has been assessed and can be assured. Update this matrix whenever ingredients, suppliers, recipes or preparation methods change. This matrix supports, but does not replace, accurate customer information and staff checks.`
 }
 function isAllergenManagementDocument(doc: Doc) {
+  if (doc.editorType === 'text') return false
   const title = doc.title.trim().toLowerCase()
-  return Boolean(doc.allergenManagementData) || doc.id === 'fs5' || title === 'allergen management policy and allergen matrix'
+  return doc.editorType === 'allergen-management' || Boolean(doc.allergenManagementData) || doc.id === 'fs5' || title === 'allergen management policy and allergen matrix'
 }
 function allergenManagementFromDocument(doc: Doc): AllergenManagementForm {
   if (doc.allergenManagementData) return { ...emptyAllergenManagement, ...doc.allergenManagementData, matrix: { ...emptyAllergenMatrix, ...doc.allergenManagementData.matrix, items: doc.allergenManagementData.matrix?.items?.length ? doc.allergenManagementData.matrix.items.map(item => ({ ...blankAllergenMenuItem(), ...item, allergens: item.allergens || [] })) : [blankAllergenMenuItem()] } }
@@ -867,6 +892,7 @@ export default function App() {
   const [showNew, setShowNew] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newCategory, setNewCategory] = useState('General')
+  const [newEditorType, setNewEditorType] = useState('auto')
   const [selectedSavedFolder, setSelectedSavedFolder] = useState('')
   const [toast, setToast] = useState('')
   const [mobileMenu, setMobileMenu] = useState(false)
@@ -1143,8 +1169,8 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   }
   function createDoc() {
     if (!newTitle.trim()) return
-    const doc: Doc = { id: crypto.randomUUID(), businessId: activeBusiness, title: newTitle.trim(), category: newCategory, content: `# ${newTitle.trim()}\n\nStart writing here...`, updatedAt: new Date().toISOString(), type: 'document' }
-    setDocs(old => [doc, ...old]); setNewTitle(''); setNewCategory('General'); setShowNew(false); openEditor(doc)
+    const doc: Doc = { id: crypto.randomUUID(), businessId: activeBusiness, title: newTitle.trim(), category: newCategory, content: `# ${newTitle.trim()}\n\nStart writing here...`, updatedAt: new Date().toISOString(), type: 'document', editorType: newEditorType === 'auto' ? undefined : newEditorType }
+    setDocs(old => [doc, ...old]); setNewTitle(''); setNewCategory('General'); setNewEditorType('auto'); setShowNew(false); openEditor(doc)
   }
   function exportDoc(doc: Doc) {
     let blob: Blob; let filename = doc.title
@@ -1370,7 +1396,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
         {page === 'businesses' && <><div className="page-heading-row"><div><div className="eyebrow">WORKSPACE MANAGEMENT</div><h1>My businesses</h1><p className="page-subtitle">Keep documents and working records separated by business.</p></div></div><div className="business-card-grid">{businesses.map(b => <button key={b.id} className={`business-card ${activeBusiness === b.id ? 'business-card-active' : ''}`} onClick={() => { setActiveBusiness(b.id); setPage('overview'); setEditing(null) }}><div className={`business-card-icon ${b.color}`}>{b.id === 'kitchen' ? <BriefcaseBusiness size={23}/> : b.id === 'events' ? <Sparkles size={23}/> : <House size={23}/>}</div><div className="business-card-copy"><b>{b.name}</b><span>{b.subtitle}</span><small>{docs.filter(d => d.businessId === b.id).length} documents in this browser</small></div><ChevronRight size={18}/></button>)}</div><div className="notice-card"><Users size={19}/><p><b>Team access is not connected yet.</b> Secure invitations, roles and shared access will be added with authentication and the cloud database. The current demo profile is local to this browser.</p></div></>}
       </div><footer className="app-footer"><span>Business Hub <span className="footer-dot">•</span> Starter version</span><span className="footer-status"><span className={`tiny-dot ${online ? '' : 'is-offline'}`}/>{online ? 'Browser storage active' : 'Offline — changes remain local'}</span></footer>
     </main>
-    {showNew && <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) setShowNew(false) }}><form className="modal" onSubmit={e => { e.preventDefault(); createDoc() }}><div className="modal-head"><div><span className="eyebrow">NEW FILE</span><h2>Create a document</h2><p>New file in {active.name}</p></div><button type="button" className="icon-button" onClick={() => setShowNew(false)} aria-label="Close"><X size={19}/></button></div><label className="field-label">Document name<input autoFocus required value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="e.g. Weekly cleaning schedule"/></label><label className="field-label">Category<select value={newCategory} onChange={e => setNewCategory(e.target.value)}><option>General</option><option>Food safety</option><option>Daily records</option><option>Temperature records</option><option>Cleaning</option><option>Allergens</option><option>Suppliers</option><option>Health & safety</option><option>Client documents</option><option>Policies</option></select></label><div className="modal-actions"><button type="button" className="button secondary" onClick={() => setShowNew(false)}>Cancel</button><button type="submit" className="button primary"><Plus size={16}/>Create & edit</button></div></form></div>}
+    {showNew && <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) setShowNew(false) }}><form className="modal" onSubmit={e => { e.preventDefault(); createDoc() }}><div className="modal-head"><div><span className="eyebrow">NEW FILE</span><h2>Create a document</h2><p>New file in {active.name}</p></div><button type="button" className="icon-button" onClick={() => setShowNew(false)} aria-label="Close"><X size={19}/></button></div><label className="field-label">Document name<input autoFocus required value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="e.g. Weekly cleaning schedule"/></label><label className="field-label">Editor type<select value={newEditorType} onChange={e => { const choice = e.target.value; setNewEditorType(choice); const folder = ({'policy': 'Folder 1 — Food Safety Management','management-pack': 'Folder 1 — Food Safety Management','hygiene-policy': 'Folder 1 — Food Safety Management','food-process': 'Folder 1 — Food Safety Management','preparation-records': 'Folder 4 — Home Preparation & Transport','opening-closing': 'Folder 1 — Food Safety Management','daily-temperature': 'Folder 4 — Home Preparation & Transport','temperature-monitoring': 'Folder 4 — Home Preparation & Transport','cleaning': 'Folder 3 — Cleaning & Sanitising','sanitiser': 'Folder 3 — Cleaning & Sanitising','equipment-checks': 'Folder 3 — Cleaning & Sanitising','supplier-delivery': 'Folder 2 — Food Handling & Storage','storage-rotation': 'Folder 2 — Food Handling & Storage','allergen-matrix': 'Folder 2 — Food Handling & Storage','allergen-management': 'Folder 2 — Food Handling & Storage','transport': 'Folder 4 — Home Preparation & Transport','pest-waste-water': 'Folder 1 — Food Safety Management','training': 'Folder 1 — Food Safety Management','document-review': 'Folder 1 — Food Safety Management','business-registration': 'Folder 5 — Business & Council Paperwork','permissions-licences': 'Folder 5 — Business & Council Paperwork','insurance': 'Folder 5 — Business & Council Paperwork','correspondence': 'Folder 5 — Business & Council Paperwork','business-details': 'Folder 6 — Extras','useful-resources': 'Folder 6 — Extras'} as Record<string, string>)[choice]; if (folder) setNewCategory(folder) }}><option value="auto">Auto detect from document name</option><option value="text">Plain text document</option><option value="policy">Food safety policy and responsibilities</option><option value="management-pack">Food safety management pack</option><option value="hygiene-policy">Personal hygiene and staff illness policy</option><option value="food-process">Preparation, cooking, cooling and reheating procedures</option><option value="preparation-records">Food preparation records</option><option value="opening-closing">Daily opening and closing checks</option><option value="daily-temperature">Daily temperature records</option><option value="temperature-monitoring">Temperature monitoring log</option><option value="cleaning">Cleaning and disinfection schedule</option><option value="sanitiser">Sanitiser use logs</option><option value="equipment-checks">Equipment checks and maintenance records</option><option value="supplier-delivery">Supplier and delivery records</option><option value="storage-rotation">Food storage and stock rotation records</option><option value="allergen-matrix">Allergen matrix — menu</option><option value="allergen-management">Allergen management policy and matrix</option><option value="transport">Transport logs</option><option value="pest-waste-water">Pest control, waste and water safety records</option><option value="training">Food safety training records</option><option value="document-review">Document review and update log</option><option value="business-registration">Business registration records</option><option value="permissions-licences">Permissions and licences register</option><option value="insurance">Insurance records</option><option value="correspondence">Council and business correspondence log</option><option value="business-details">Business details and key contacts form</option><option value="useful-resources">Useful resources register</option></select></label><label className="field-label">Category<select value={newCategory} onChange={e => setNewCategory(e.target.value)}><option>General</option><option>Food safety</option><option>Daily records</option><option>Temperature records</option><option>Cleaning</option><option>Allergens</option><option>Suppliers</option><option>Health & safety</option><option>Client documents</option><option>Policies</option><option value="Folder 1 — Food Safety Management">Food Safety Management folder</option><option value="Folder 2 — Food Handling &amp; Storage">Food Handling &amp; Storage folder</option><option value="Folder 3 — Cleaning &amp; Sanitising">Cleaning &amp; Sanitising folder</option><option value="Folder 4 — Home Preparation &amp; Transport">Home Preparation &amp; Transport folder</option><option value="Folder 5 — Business &amp; Council Paperwork">Business &amp; Council Paperwork folder</option><option value="Folder 6 — Extras">Extras folder</option></select></label><div className="modal-actions"><button type="button" className="button secondary" onClick={() => setShowNew(false)}>Cancel</button><button type="submit" className="button primary"><Plus size={16}/>Create & edit</button></div></form></div>}
     {toast && <div className="toast"><Check size={17}/>{toast}<button onClick={() => setToast('')} aria-label="Dismiss"><X size={15}/></button></div>}
   </div>
 }
