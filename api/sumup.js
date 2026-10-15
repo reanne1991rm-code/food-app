@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     const sent = values[STATE_COOKIE] || ''
     const [state, signature] = sent.split('.')
     const returned = String(req.query?.state || '')
-    const expected = state ? createHmac('sha256', secretKey()).update(state).digest('base64url') : ''
+    const expected = state && configured() ? createHmac('sha256', secretKey()).update(state).digest('base64url') : ''
     const valid = state && signature && returned === state && Buffer.from(signature).length === Buffer.from(expected).length && timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
     res.setHeader('Set-Cookie', [clearCookie(STATE_COOKIE), clearCookie(SESSION_COOKIE)])
     if (!configured() || !valid || !req.query?.code) {
