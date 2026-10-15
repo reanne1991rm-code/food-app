@@ -439,7 +439,8 @@ function sanitiserLogMarkdown(form: SanitiserLogForm) {
   const rows = form.entries.filter(entry => Object.values(entry).some(value => value.trim()))
   const tableRows = rows.map(entry => `| ${entry.time} | ${entry.area} | ${entry.product} | ${entry.dilution} | ${entry.contactTime} | ${entry.method} | ${entry.result} | ${entry.action} | ${entry.completedBy} |`).join('\n')
   return `# Sanitiser Use Logs\n\n**Date:** ${form.date || 'To be completed'}\n\n| Time | Area / equipment | Sanitiser product | Dilution / concentration | Contact time | Method / check | Result | Corrective action | Completed by |\n|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Use a food-safe product suitable for the surface. Follow the label for dilution, application, contact time and rinsing. Record checks and actions when they happen.`
-}function isCleaningRecordDocument(doc: Doc) {
+}
+function isCleaningRecordDocument(doc: Doc) {
   return Boolean(doc.cleaningData) || doc.id === 'fs4' || doc.title.trim().toLowerCase() === 'cleaning and disinfection schedule and records'
 }
 function cleaningRecordFromDocument(doc: Doc): CleaningRecordForm {
