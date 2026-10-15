@@ -880,8 +880,16 @@ section.editor-panel .button.secondary {
 .cleaning-issue-field { grid-column:1 / -1; }
 .cleaning-record-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
 .cleaning-record-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
+.management-pack-form { display:grid; gap:18px; }
+.management-pack-section { display:grid; gap:13px; padding:17px; border:1px solid rgba(255,255,255,.13); border-radius:13px; background:rgba(255,255,255,.025); }
+.management-pack-section h3 { margin:0; color:#f2c45b; font-size:16px; }
+.management-pack-section .field-label { min-width:0; margin:0; }
+.management-pack-section textarea { min-height:88px; }
+.management-pack-section .overview-form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.management-pack-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
+.management-pack-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
 @media (max-width: 760px) {
-  .temperature-check-grid, .temperature-record-form .overview-form-grid, .cleaning-record-form .overview-form-grid, .cleaning-record-grid { grid-template-columns: minmax(0, 1fr); }
+  .temperature-check-grid, .temperature-record-form .overview-form-grid, .cleaning-record-form .overview-form-grid, .cleaning-record-grid, .management-pack-section .overview-form-grid { grid-template-columns: minmax(0, 1fr); }
   .cleaning-issue-field { grid-column:auto; }
   .temperature-action-field { grid-column: auto; }
   .temperature-check-list-heading { align-items: flex-start; flex-direction: column; }
