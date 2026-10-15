@@ -532,7 +532,35 @@ export default function App() {
   const [mobileMenu, setMobileMenu] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
   const active = businesses.find(b => b.id === activeBusiness) ?? businesses[0]
-  const businessDocs = useMemo(() => docs.filter(d => d.businessId === activeBusiness), [docs, activeBusiness])
+  const businessDocs = useMemo(() => {
+    const selected = docs.filter(d => d.businessId === activeBusiness)
+    if (activeBusiness !== 'kitchen') return selected
+    const importance = [
+      'Food Safety Management Pack',
+      'Food safety management overview',
+      'Food safety policy and responsibilities',
+      'Food preparation, cooking, cooling and reheating procedures',
+      'Allergen management policy and allergen matrix',
+      'Allergen Matrix — Menu',
+      'Personal hygiene and staff illness policy',
+      'Daily Opening & Closing Checks',
+      'Opening and closing checklists',
+      'Temperature Monitoring Log',
+      'Daily temperature records',
+      'Supplier and delivery records',
+      'Food storage and stock rotation records',
+      'Cleaning and disinfection schedule and records',
+      'Pest control, waste and water safety records',
+      'Corrective actions and incident records',
+      'Food safety training records',
+      'Document review and update log',
+    ]
+    const rank = (doc: Doc) => {
+      const index = importance.findIndex(title => title.toLowerCase() === doc.title.trim().toLowerCase())
+      return index < 0 ? importance.length : index
+    }
+    return selected.map((doc, index) => ({ doc, index })).sort((a, b) => rank(a.doc) - rank(b.doc) || a.index - b.index).map(item => item.doc)
+  }, [docs, activeBusiness])
   const filteredDocs = useMemo(() => businessDocs.filter(d => `${d.title} ${d.category} ${d.content}`.toLowerCase().includes(search.toLowerCase())), [businessDocs, search])
   const isOnline = typeof navigator === 'undefined' ? true : navigator.onLine
   const [online, setOnline] = useState(isOnline)
