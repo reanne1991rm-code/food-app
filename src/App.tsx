@@ -346,13 +346,14 @@ function foodProcessFromDocument(doc: Doc): FoodProcessForm {
   const section = (name: string) => doc.content.match(new RegExp(`## ${name}\\s*\\n([\\s\\S]*?)(?=\\n## |$)`, 'i'))?.[1]?.trim() || ''
   const cooking = section('Cooking')
   const handling = section('Cooling and reheating')
-  const reheatingAt = handling.search(/reheat/i)
+  const procedureText = handling.split(/Food-specific limits and methods/i)[0].trim()
+  const reheatingAt = procedureText.search(/(?:^|\n)-\s*Reheat/i)
   return {
     ...emptyFoodProcessStepForm,
     preparation: { ...blankFoodProcessStep(), method: section('Preparation') },
     cooking: { ...emptyFoodProcessStepForm.cooking, method: cooking },
-    cooling: { ...blankFoodProcessStep(), method: reheatingAt > 0 ? handling.slice(0, reheatingAt).trim() : handling },
-    reheating: { ...emptyFoodProcessStepForm.reheating, method: reheatingAt >= 0 ? handling.slice(reheatingAt).trim() : '' },
+    cooling: { ...blankFoodProcessStep(), method: reheatingAt > 0 ? procedureText.slice(0, reheatingAt).trim() : procedureText },
+    reheating: { ...emptyFoodProcessStepForm.reheating, method: reheatingAt >= 0 ? procedureText.slice(reheatingAt).trim() : '' },
     notes: doc.content.match(/Food-specific limits and methods[\s\S]*$/i)?.[0]?.trim() || ''
   }
 }
