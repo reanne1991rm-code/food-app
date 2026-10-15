@@ -370,10 +370,10 @@ function isHygienePolicyDocument(doc: Doc) {
 function hygienePolicyFromDocument(doc: Doc): HygienePolicyForm {
   if (doc.hygienePolicyData) return { ...emptyHygienePolicyForm, ...doc.hygienePolicyData }
   const personal = doc.content.match(/## Personal hygiene\s*\n([\s\S]*?)(?=\n## |$)/i)?.[1] || ''
-  const illness = doc.content.match(/## Illness reporting\s*\n([\s\S]*?)(?=\n## |$)/i)?.[1] || ''
+  const illness = (doc.content.match(/## Illness reporting\s*\n([\s\S]*?)(?=\n## |$)/i)?.[1] || '').split(/\nPerson responsible for decisions:/i)[0].trim()
   const lines = personal.split(/\r?\n/).map(line => line.replace(/^\s*[-*]\s*/, '').trim()).filter(Boolean)
   const pick = (pattern: RegExp) => lines.find(line => pattern.test(line))
-  return { ...emptyHygienePolicyForm, handwashing: pick(/wash hands/i) || emptyHygienePolicyForm.handwashing, clothing: pick(/work clothing|hair/i) || emptyHygienePolicyForm.clothing, wounds: pick(/cuts|wound/i) || emptyHygienePolicyForm.wounds, hygiene: lines.filter(line => !/wash hands|work clothing|hair|cuts|wound/i.test(line)).join('\n') || emptyHygienePolicyForm.hygiene, symptoms: illness.trim() || emptyHygienePolicyForm.symptoms, responsible: doc.content.match(/Person responsible for decisions:\s*(.*)/i)?.[1]?.trim() || '', records: doc.content.match(/Staff briefing\s*\/\s*acknowledgement records:\s*([\s\S]*)/i)?.[1]?.trim() || emptyHygienePolicyForm.records }
+  return { ...emptyHygienePolicyForm, handwashing: pick(/wash hands/i) || emptyHygienePolicyForm.handwashing, clothing: pick(/work clothing|hair/i) || emptyHygienePolicyForm.clothing, wounds: pick(/cuts|wound/i) || emptyHygienePolicyForm.wounds, hygiene: lines.filter(line => !/wash hands|work clothing|hair|cuts|wound/i.test(line)).join('\n') || emptyHygienePolicyForm.hygiene, symptoms: illness.trim() || emptyHygienePolicyForm.symptoms, responsible: doc.content.match(/^Person responsible for decisions:[ \t]*([^\r\n]*)/im)?.[1]?.trim() || '', records: doc.content.match(/^Staff briefing\s*\/\s*acknowledgement records:[ \t]*([^\r\n]*)/im)?.[1]?.trim() || emptyHygienePolicyForm.records }
 }
 function hygienePolicyMarkdown(form: HygienePolicyForm) {
   const field = (label: string, value: string) => `**${label}:** ${value.trim() || 'To be completed.'}`
