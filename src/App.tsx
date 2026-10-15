@@ -943,7 +943,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             <button className="sk-folder-card sk-folder-amber" onClick={() => navigate('transport-folder')}>
               <span className="sk-folder-number">4</span><span className="sk-folder-icon"><BriefcaseBusiness size={27}/></span><span className="sk-folder-copy"><b>Home Preparation &amp; Transport</b><small>Preparation records, transport logs and temperature monitoring.</small></span><ChevronRight className="sk-folder-arrow" size={21}/>
             </button>
-            <button className="sk-folder-card sk-folder-purple" onClick={() => navigate('business-paperwork-folder') }}>
+            <button className="sk-folder-card sk-folder-purple" onClick={() => navigate('business-paperwork-folder')}>
               <span className="sk-folder-number">5</span><span className="sk-folder-icon"><FileText size={27}/></span><span className="sk-folder-copy"><b>Business &amp; Council Paperwork</b><small>Registration, permissions, insurance and correspondence.</small></span><ChevronRight className="sk-folder-arrow" size={21}/>
             </button>
             <button className="sk-folder-card sk-folder-slate" onClick={() => navigate('documents')}>
