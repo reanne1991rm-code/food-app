@@ -441,8 +441,8 @@ function equipmentChecksFromDocument(doc: Doc): EquipmentChecksForm {
 }
 function equipmentChecksMarkdown(form: EquipmentChecksForm) {
   const rows = form.entries.filter(entry => Object.values(entry).some(value => value.trim()))
-  const tableRows = rows.map(entry => `| ${entry.date} | ${entry.time} | ${entry.equipment} | ${entry.assetId} | ${entry.condition} | ${entry.safeToUse} | ${entry.fault} | ${entry.removedFromUse} | ${entry.repairAction} | ${entry.checkedBy} | ${entry.verification} |`).join('\\n')
-  return `# Equipment Checks and Maintenance Records\\n\\n| Date | Time | Equipment / asset | ID / location | Condition | Safe to use? | Fault / damage | Removed from use? | Repair / action | Checked by | Follow-up verification |\\n|---|---|---|---|---|---|---|---|---|---|---|\\n${tableRows}\\n\\n${form.notes ? `## Additional notes\\n${form.notes}\\n\\n` : ''}Check equipment that could affect food safety, cleanliness or safe operation. Do not use damaged or unsafe equipment. Record the issue, immediate control, repair and how return to service was verified.`
+  const tableRows = rows.map(entry => `| ${entry.date} | ${entry.time} | ${entry.equipment} | ${entry.assetId} | ${entry.condition} | ${entry.safeToUse} | ${entry.fault} | ${entry.removedFromUse} | ${entry.repairAction} | ${entry.checkedBy} | ${entry.verification} |`).join('\n')
+  return `# Equipment Checks and Maintenance Records\n\n| Date | Time | Equipment / asset | ID / location | Condition | Safe to use? | Fault / damage | Removed from use? | Repair / action | Checked by | Follow-up verification |\n|---|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Check equipment that could affect food safety, cleanliness or safe operation. Do not use damaged or unsafe equipment. Record the issue, immediate control, repair and how return to service was verified.`
 }
 function isSanitiserLogDocument(doc: Doc) {
   return Boolean(doc.sanitiserLogData) || doc.id === 'fs15' || doc.title.trim().toLowerCase() === 'sanitiser use logs'
