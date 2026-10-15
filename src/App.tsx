@@ -82,6 +82,8 @@ const savedFormFolders = [
   'Saved Training Records',
   'Saved Document Review Logs',
   'Saved Business & Council Paperwork',
+  'Saved Income Records',
+  'Saved Expense Records',
   'Saved Extras',
 ]
 function savedFormFolderFor(doc: Doc) {
@@ -1038,7 +1040,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             </div>
           </section>
         </>}
-        {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name}/>}
+        {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name} onSaveTransaction={transaction => setDocs(old => [financeTransactionDocument(transaction, activeBusiness), ...old])}/>}
         {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{isManagementPackDocument(editing) ? <ManagementPackEditor value={managementPackForm} onChange={setManagementPackForm}/> : (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
   <details className="overview-preview"><summary>Show the information that will be saved in the document</summary><pre>{overviewMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Complete the business details below</b><p>Use the dropdowns where available. If unsure, choose “To be confirmed” or leave the box blank rather than guessing.</p></div>
@@ -1296,6 +1298,28 @@ function TrainingRecordsEditor({ value, onChange }: { value: TrainingRecordsForm
 }
 
 type FinanceTransaction = { id: string; kind: 'income' | 'expense'; date: string; amount: number; description: string; category: string; counterparty: string; method: string; reference: string; notes: string; source: 'manual' | 'sumup' }
+function financeTransactionDocument(transaction: FinanceTransaction, businessId: string): Doc {
+  const isIncome = transaction.kind === 'income'
+  const typeLabel = isIncome ? 'Income' : 'Expense'
+  const folder = isIncome ? 'Saved Income Records' : 'Saved Expense Records'
+  const dateLabel = new Date(transaction.date + 'T12:00:00').toLocaleDateString('en-GB')
+  const amountLabel = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(transaction.amount)
+  const lines = [
+    `# ${typeLabel} Record — ${transaction.description}`,
+    '',
+    `**Business:** ${businessId}`,
+    `**Date:** ${dateLabel}`,
+    `**Type:** ${typeLabel}`,
+    `**Amount:** ${amountLabel}`,
+    `**Category:** ${transaction.category}`,
+    `**Supplier / customer:** ${transaction.counterparty || 'Not entered'}`,
+    `**Payment method:** ${transaction.method || 'Not entered'}`,
+    `**Reference:** ${transaction.reference || 'Not entered'}`,
+    `**Source:** ${transaction.source === 'sumup' ? 'SumUp' : 'Manual entry'}`,
+    `**Notes:** ${transaction.notes || 'None'}`,
+  ]
+  return { id: crypto.randomUUID(), businessId, title: `${typeLabel} Record — ${transaction.description} — ${dateLabel}`, category: `${savedFormsPrefix}${folder}`, content: lines.join('\\n'), updatedAt: new Date().toISOString(), type: 'record' }
+}
 function parseFinanceCsv(text: string): FinanceTransaction[] {
   const rows: string[][] = []
   let row: string[] = [], cell = '', quoted = false
@@ -1336,7 +1360,7 @@ function parseFinanceCsv(text: string): FinanceTransaction[] {
     return [{ id: 'sumup-' + (reference || date + '-' + index), kind: 'income' as const, date, amount, description: description || 'SumUp card payment', category: 'Card sales', counterparty: 'SumUp card reader', method: 'SumUp card reader' + (currency ? ' · ' + currency.toUpperCase() : ''), reference, notes: 'Imported from SumUp CSV' + (status ? ' · ' + status : ''), source: 'sumup' as const }]
   })
 }
-function FinanceDashboard({ businessId, businessName }: { businessId: string; businessName: string }) {
+function FinanceDashboard({ businessId, businessName, onSaveTransaction }: { businessId: string; businessName: string; onSaveTransaction: (transaction: FinanceTransaction) => void }) {
   const [transactions, setTransactions] = useState<FinanceTransaction[]>(() => { try { const saved = localStorage.getItem('bh-finance-v1-' + businessId); return saved ? JSON.parse(saved) : [] } catch { return [] } })
   const [kind, setKind] = useState<'income' | 'expense'>('expense')
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
@@ -1419,9 +1443,11 @@ function FinanceDashboard({ businessId, businessName }: { businessId: string; bu
     event.preventDefault()
     const parsed = Number(amount)
     if (!date || !description.trim() || !category || !Number.isFinite(parsed) || parsed <= 0) { setNotice('Add a date, description, category and valid amount before saving.'); return }
-    setTransactions(old => [{ id: crypto.randomUUID(), kind, date, amount: parsed, description: description.trim(), category, counterparty: counterparty.trim(), method: method || (kind === 'income' ? 'Cash / other' : 'Bank / other'), reference: reference.trim(), notes: notes.trim(), source: 'manual' }, ...old])
+    const transaction: FinanceTransaction = { id: crypto.randomUUID(), kind, date, amount: parsed, description: description.trim(), category, counterparty: counterparty.trim(), method: method || (kind === 'income' ? 'Cash / other' : 'Bank / other'), reference: reference.trim(), notes: notes.trim(), source: 'manual' }
+    setTransactions(old => [transaction, ...old])
+    onSaveTransaction(transaction)
     setAmount(''); setDescription(''); setCategory(''); setCounterparty(''); setMethod(''); setReference(''); setNotes('')
-    setNotice('Transaction saved in this browser.')
+    setNotice(`Transaction saved and filed in Extras / Saved Forms / Saved ${kind === 'income' ? 'Income' : 'Expense'} Records.`)
   }
   function importCsv(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]; if (!file) return
