@@ -449,8 +449,8 @@ function businessRegistrationFromDocument(doc: Doc): BusinessRegistrationForm {
 }
 function businessRegistrationMarkdown(form: BusinessRegistrationForm) {
   const rows = form.entries.filter(entry => Object.values(entry).some(value => value.trim()))
-  const tableRows = rows.map(entry => `| ${entry.registrationType} | ${entry.authority} | ${entry.reference} | ${entry.submittedDate} | ${entry.registrationDate} | ${entry.renewalDate} | ${entry.status} | ${entry.evidence} | ${entry.followUp} | ${entry.responsible} |`).join('\\n')
-  return `# Business Registration Records\\n\\n| Registration type | Registering authority | Application / reference | Submitted | Registration date | Renewal / review | Status | Evidence location | Follow-up action | Responsible person |\\n|---|---|---|---|---|---|---|---|---|---|\\n${tableRows}\\n\\n${form.notes ? `## Additional notes\\n${form.notes}\\n\\n` : ''}Record registrations relevant to the business, reference details, dates, status and where supporting evidence is stored. Confirm requirements and deadlines with the relevant authority.`
+  const tableRows = rows.map(entry => `| ${entry.registrationType} | ${entry.authority} | ${entry.reference} | ${entry.submittedDate} | ${entry.registrationDate} | ${entry.renewalDate} | ${entry.status} | ${entry.evidence} | ${entry.followUp} | ${entry.responsible} |`).join('\n')
+  return `# Business Registration Records\n\n| Registration type | Registering authority | Application / reference | Submitted | Registration date | Renewal / review | Status | Evidence location | Follow-up action | Responsible person |\n|---|---|---|---|---|---|---|---|---|---|\n${tableRows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Record registrations relevant to the business, reference details, dates, status and where supporting evidence is stored. Confirm requirements and deadlines with the relevant authority.`
 }
 function isTransportLogsDocument(doc: Doc) {
   return Boolean(doc.transportLogsData) || doc.id === 'fs18' || doc.title.trim().toLowerCase() === 'transport logs'
