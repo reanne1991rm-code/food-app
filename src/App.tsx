@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Archive, ArrowDownToLine, ArrowLeft, ArrowUpFromLine, Bell, BookOpenCheck, BriefcaseBusiness, Building2, Check, ChevronDown, ChevronRight, CircleHelp, ClipboardCheck, Cloud, File, FilePlus2, FileText, Folder, House, LayoutDashboard, Menu, MoreHorizontal, Pencil, Plus, Search, Settings, ShieldCheck, Sparkles, Users, Wifi, WifiOff, X } from 'lucide-react'
 
 type Business = { id: string; name: string; subtitle: string; icon: string; color: string }
-type Doc = { id: string; businessId: string; title: string; category: string; content: string; updatedAt: string; type: string; pinned?: boolean; fileData?: string; mimeType?: string; fileSize?: number }
+type Doc = { id: string; businessId: string; title: string; category: string; content: string; updatedAt: string; type: string; pinned?: boolean; fileData?: string; mimeType?: string; fileSize?: number; policyData?: PolicyForm; temperatureData?: TemperatureRecordForm }
 type SafetyItem = { id: string; title: string; detail: string; done: boolean }
 
 const businesses: Business[] = [
@@ -16,7 +16,7 @@ const initialDocs: Doc[] = [
   { id: 'd3', businessId: 'kitchen', title: 'Temperature Monitoring Log', category: 'Temperature records', content: '# Temperature Monitoring Log\n\nDate | Equipment / food | Reading | Required limit | Action if outside limit | Initials\n\nRecord actual readings at the frequency set in your food safety procedures. If a reading is outside the required limit, record the corrective action and verify the food is safe before use.', updatedAt: 'Starter template', type: 'record' },
   { id: 'd4', businessId: 'kitchen', title: 'Allergen Matrix — Menu', category: 'Allergens', content: '# Allergen Matrix — Menu\n\nAdd each menu item and verify the ingredients and allergen information against current supplier labels and recipes.\n\nMenu item | Ingredient source checked | Allergens present | Cross-contact controls | Checked by | Date\n\nNever guess allergen information. Update this matrix whenever a recipe, supplier or ingredient changes.', updatedAt: 'Starter template', type: 'document' },
   { id: 'fs1', businessId: 'kitchen', title: 'Food safety management overview', category: 'Folder 1 — Food Safety Management', content: '# Food Safety Management Overview\n\nBusiness: The Small Kitchen\nResponsible person:\nReview date:\n\n## How this system is used\nKeep this folder as the central record of the food safety procedures and checks used by the food trailer. Complete records at the time of the check, record actual readings and actions, and review procedures whenever the menu, equipment, suppliers, premises or working methods change.\n\n## Daily controls\n- Check the trailer and handwashing facilities before work.\n- Check and record refrigeration, cooking and hot-holding controls where applicable.\n- Prevent raw-to-ready-to-eat cross-contamination.\n- Keep current ingredient and allergen information available.\n- Clean and disinfect according to the schedule.\n- Record problems and corrective actions.\n\nThis is a starter template. Adapt it to your actual operation and current Food Standards Agency guidance before use.', updatedAt: 'Starter template', type: 'document', pinned: true },
-  { id: 'fs2', businessId: 'kitchen', title: 'Food safety policy and responsibilities', category: 'Folder 1 — Food Safety Management', content: '# Food Safety Policy and Responsibilities\n\nBusiness: The Small Kitchen\nFood safety lead:\nDeputy / cover:\nEffective date:\nReview date:\n\n## Policy\nWe will prepare and serve food safely, follow applicable food hygiene requirements, give accurate allergen information, maintain clean equipment and facilities, and keep truthful records.\n\n## Responsibilities\n- Owner / food safety lead: maintain procedures, check records, arrange training and act on problems.\n- Food handlers: follow safe methods, wash hands, prevent cross-contamination, report illness and record assigned checks.\n- Person in charge each shift:\n\n## Reporting\nReport unsafe food, temperature failures, allergen mistakes, pests, water problems, illness or equipment faults immediately. Record the action taken and who verified it.', updatedAt: 'Starter template', type: 'document' },
+  { id: 'fs2-v2', businessId: 'kitchen', title: 'Food safety policy and responsibilities', category: 'Folder 1 — Food Safety Management', content: '# Food Safety Policy and Responsibilities\n\nBusiness: The Small Kitchen\nFood safety lead:\nDeputy / cover:\nEffective date:\nReview date:\n\n## Policy\nWe will prepare and serve food safely, follow applicable food hygiene requirements, give accurate allergen information, maintain clean equipment and facilities, and keep truthful records.\n\n## Responsibilities\n- Owner / food safety lead: maintain procedures, check records, arrange training and act on problems.\n- Food handlers: follow safe methods, wash hands, prevent cross-contamination, report illness and record assigned checks.\n- Person in charge each shift:\n\n## Reporting\nReport unsafe food, temperature failures, allergen mistakes, pests, water problems, illness or equipment faults immediately. Record the action taken and who verified it.', updatedAt: 'Starter template', type: 'document' },
   { id: 'fs3', businessId: 'kitchen', title: 'Daily temperature records', category: 'Folder 1 — Food Safety Management', content: '# Daily Temperature Records\n\nDate:\nPerson completing checks:\n\nTime | Equipment / food | Actual temperature (°C) | Business limit | Pass / fail | Corrective action | Initials\n\n\nRecord actual readings at the frequency set in the food safety procedures. Use a suitable, clean thermometer where required. Do not write a guessed reading. If a limit is missed, assess the food, take safe corrective action and record what happened. Set limits using current official guidance and the specific food and process.', updatedAt: 'Starter template', type: 'record' },
   { id: 'fs4', businessId: 'kitchen', title: 'Cleaning and disinfection schedule and records', category: 'Folder 1 — Food Safety Management', content: '# Cleaning and Disinfection Schedule and Records\n\nDate | Area / item | Product and dilution (label instructions) | Method / contact time | Frequency | Completed by | Checked by | Issue / action\n\nAreas to include as applicable: food-contact surfaces, utensils, fryer and cooker surfaces, fridge handles and shelves, food warmer, sinks, handwashing points, floors, bins, storage areas and vehicle touchpoints. Clean first, then disinfect food-contact surfaces using a suitable product according to its label. Keep chemicals away from food and utensils.', updatedAt: 'Starter template', type: 'record' },
   { id: 'fs5', businessId: 'kitchen', title: 'Allergen management policy and allergen matrix', category: 'Folder 1 — Food Safety Management', content: '# Allergen Management Policy and Allergen Matrix\n\nResponsible person:\nLast verified:\n\n## Policy\nNever guess allergen information. Check recipes, every ingredient label and supplier information. Prevent cross-contact, keep packaging available for verification and update the matrix whenever a recipe, product or supplier changes. If information cannot be verified, do not claim a dish is allergen-free.\n\n## Menu matrix\nMenu item | Ingredient / brand | Cereals containing gluten | Crustaceans | Eggs | Fish | Peanuts | Soybeans | Milk | Nuts | Celery | Mustard | Sesame | Sulphur dioxide / sulphites | Lupin | Molluscs | Cross-contact controls | Checked by / date\n\nFill in only after checking current product labels and recipes. This blank matrix is not verified allergen advice.', updatedAt: 'Starter template', type: 'document' },
@@ -45,13 +45,13 @@ const safetyInitial: SafetyItem[] = [
 const prettyDate = (value: string) => value === 'Starter template' ? value : new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
 type OverviewForm = {
-  responsiblePerson: string; businessAddress: string; contactPhone: string; contactEmail: string;
+  businessName: string; responsiblePerson: string; businessAddress: string; contactPhone: string; contactEmail: string;
   tradingLocation: string; preparationLocation: string; foodTypes: string; serviceStyle: string;
   staffCount: string; waterSupply: string; wastewater: string; refrigeration: string;
   hotHolding: string; trainingStatus: string; reviewDate: string; notes: string;
 }
 const emptyOverviewForm: OverviewForm = {
-  responsiblePerson: '', businessAddress: '', contactPhone: '', contactEmail: '',
+  businessName: 'The Small Kitchen', responsiblePerson: '', businessAddress: '', contactPhone: '', contactEmail: '',
   tradingLocation: '', preparationLocation: 'Trailer only', foodTypes: 'Hot food prepared and served',
   serviceStyle: 'Made to order', staffCount: 'Owner only', waterSupply: 'Fresh-water tank',
   wastewater: 'Separate wastewater tank', refrigeration: 'Fridge and/or freezer used as required',
@@ -64,7 +64,12 @@ type PolicyForm = {
   businessName: string; businessAddress: string; tradingLocation: string; staffRoles: string;
   illnessReporting: string; training: string; allergenControl: string;
   recordKeeping: string; reviewFrequency: string; signedBy: string; notes: string; policyNotes: string; shiftResponsibilities: string; illnessNotes: string; recordNotes: string;
+  ownerResponsibilities: string; handlerResponsibilities: string; cleaningResponsibilities: string; crossContamination: string; temperatureControl: string; correctiveActions: string;
 }
+type TemperatureCheck = { time: string; item: string; actual: string; limit: string; result: string; action: string; initials: string }
+type TemperatureRecordForm = { date: string; completedBy: string; checks: TemperatureCheck[]; notes: string }
+const blankTemperatureCheck = (): TemperatureCheck => ({ time: '', item: '', actual: '', limit: '', result: '', action: '', initials: '' })
+const emptyTemperatureRecord: TemperatureRecordForm = { date: '', completedBy: '', checks: [blankTemperatureCheck()], notes: '' }
 const emptyPolicyForm: PolicyForm = {
   foodSafetyLead: '', foodSafetyLeadName: '', deputy: '', effectiveDate: '', reviewDate: '',
   businessName: 'The Small Kitchen', businessAddress: '', tradingLocation: '', staffRoles: 'Owner / food business operator',
@@ -73,13 +78,120 @@ const emptyPolicyForm: PolicyForm = {
   allergenControl: 'Check current supplier labels and recipes; provide accurate information and prevent cross-contact',
   recordKeeping: 'Complete records at the time checks are made; record actual results and corrective actions',
   reviewFrequency: 'At least annually and whenever the menu, process, equipment, premises or staff change',
-  signedBy: '', notes: '', policyNotes: '', shiftResponsibilities: '', illnessNotes: '', recordNotes: ''
+  signedBy: '', notes: '', policyNotes: '', shiftResponsibilities: '', illnessNotes: '', recordNotes: '',
+  ownerResponsibilities: 'Maintain suitable procedures, equipment and training; review records and act on problems.',
+  handlerResponsibilities: 'Follow procedures, maintain hygiene, complete checks honestly, and report illness or unsafe conditions promptly.',
+  cleaningResponsibilities: 'Clean first, then disinfect food-contact surfaces with a suitable product following its label and contact time; record completion and issues.',
+  crossContamination: 'Keep raw and ready-to-eat food separate; use suitable dedicated or effectively cleaned equipment, utensils and work surfaces.',
+  temperatureControl: 'Follow documented controls for chilled storage, cooking, cooling, reheating and hot holding as applicable; record actual checks and act on failures.',
+  correctiveActions: 'Stop unsafe work, protect customers, isolate or discard affected food as appropriate, tell the person in charge, and record actions and follow-up.'
+}
+
+function isPolicyDocument(doc: Doc) {
+  const title = doc.title.trim().toLowerCase()
+  const content = doc.content.trimStart().toLowerCase()
+  return Boolean(doc.policyData) || doc.id === 'fs2' || doc.id === 'fs2-v2' || title.includes('food safety policy and responsibilities') ||
+    (doc.category.toLowerCase().includes('food safety') && (content.startsWith('# food safety policy and responsibilities') || content.includes('## 1. food safety policy') || content.includes('**food safety lead:**')))
+}
+
+function policyFormFromDocument(doc: Doc): PolicyForm {
+  if (doc.policyData) return { ...emptyPolicyForm, ...doc.policyData }
+  const field = (label: string) => {
+    const safeLabel = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return doc.content.match(new RegExp(`^(?:\\*\\*)?${safeLabel}(?:\\*\\*)?:\\s*(.*)$`, 'im'))?.[1]?.trim() ?? ''
+  }
+  const validDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : ''
+  const lead = field('Food safety lead')
+  const [role = '', ...name] = lead.split(' — ')
+  const savedSection = (heading: string) => doc.content.match(new RegExp(`## ${heading}\\n([\\s\\S]*?)(?=\\n## |$)`, 'i'))?.[1]?.trim() ?? ''
+  const savedChoice = (heading: string, choices: string[]) => {
+    const text = savedSection(heading)
+    return choices.find(choice => text.startsWith(choice)) ?? ''
+  }
+  return { ...emptyPolicyForm, businessName: field('Business') || emptyPolicyForm.businessName,
+    foodSafetyLead: role === 'To be completed' ? '' : role, foodSafetyLeadName: name.join(' — '),
+    deputy: field('Deputy / cover'), businessAddress: field('Business / correspondence address'),
+    tradingLocation: field('Intended trading location'), effectiveDate: validDate(field('Effective date')),
+    reviewDate: validDate(field('Review date')), signedBy: field('Approved / signed by') || field('Signature'),
+    illnessReporting: savedChoice('3\\. Illness, wounds and fitness to handle food', [
+      'Staff must report vomiting, diarrhoea, infected wounds or other symptoms before handling food',
+      'Staff must report illness and follow the written illness procedure and current official guidance',
+      'To be confirmed and written into the illness procedure'
+    ]) || emptyPolicyForm.illnessReporting,
+    training: savedChoice('4\\. Training and supervision', [
+      'Training and supervision appropriate to duties; retain evidence of training',
+      'Food handlers need induction before working and ongoing supervision',
+      'Training arrangements still to be confirmed'
+    ]) || emptyPolicyForm.training,
+    allergenControl: savedChoice('5\\. Allergen management', [
+      'Check current supplier labels and recipes; provide accurate information and prevent cross-contact',
+      'Use a written allergen matrix and check every recipe and substitution',
+      'Allergen procedure still to be completed before service'
+    ]) || emptyPolicyForm.allergenControl,
+    recordKeeping: savedChoice('6\\. Records and corrective action', [
+      'Complete records at the time checks are made; record actual results and corrective actions',
+      'Use daily checklists and keep temperature, cleaning, delivery and corrective-action records',
+      'Record-keeping procedure still to be confirmed'
+    ]) || emptyPolicyForm.recordKeeping,
+    reviewFrequency: savedChoice('7\\. Review and approval', [
+      'At least annually and whenever the menu, process, equipment, premises or staff change',
+      'Every six months and whenever a significant change occurs',
+      'Whenever a significant change occurs; set a routine review date'
+    ]) || emptyPolicyForm.reviewFrequency,
+    policyNotes: savedSection('Business-specific policy notes') || savedSection('Policy'), shiftResponsibilities: savedSection('Responsibilities and assigned shifts') || savedSection('Responsibilities'),
+    illnessNotes: savedSection('Illness reporting and action'), recordNotes: savedSection('Records and reporting') || savedSection('Reporting') }
+}
+
+function migratePolicyDocumentDocs(docs: Doc[]): Doc[] {
+  const policyTitle = 'food safety policy and responsibilities'
+  const isLegacyPolicy = (doc: Doc) => doc.id === 'fs2' || doc.id === 'fs2-v2' || doc.title.trim().toLowerCase() === policyTitle
+  const existing = docs.find(isLegacyPolicy)
+  if (!existing) return docs
+  const installed: Doc = {
+    ...existing,
+    id: 'fs2-v2',
+    title: 'Food safety policy and responsibilities',
+    category: 'Folder 1 — Food Safety Management',
+    type: 'document',
+    policyData: policyFormFromDocument(existing),
+  }
+  return [...docs.filter(doc => !isLegacyPolicy(doc)), installed]
+}
+
+function isDailyTemperatureDocument(doc: Doc) {
+  return Boolean(doc.temperatureData) || doc.id === 'fs3' || doc.title.trim().toLowerCase() === 'daily temperature records'
+}
+
+function temperatureRecordFromDocument(doc: Doc): TemperatureRecordForm {
+  if (doc.temperatureData) return { ...emptyTemperatureRecord, ...doc.temperatureData, checks: doc.temperatureData.checks?.length ? doc.temperatureData.checks.map(check => ({ ...blankTemperatureCheck(), ...check })) : [blankTemperatureCheck()] }
+  const field = (name: string) => doc.content.match(new RegExp(`^(?:\\*\\*)?${name}(?:\\*\\*)?:[ \\t]*(.*)$`, 'im'))?.[1]?.trim() ?? ''
+  const lines = doc.content.split(/\r?\n/)
+  const headerIndex = lines.findIndex(line => /time/i.test(line) && /equipment\s*\/\s*food/i.test(line) && /actual/i.test(line))
+  const checks: TemperatureCheck[] = []
+  if (headerIndex >= 0) {
+    for (const line of lines.slice(headerIndex + 1)) {
+      if (!line.includes('|') || /^\s*\|?\s*:?-{2,}/.test(line)) continue
+      const cells = line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim())
+      if (cells.length < 5 || cells.every(cell => !cell || /^:?-+:?$/.test(cell))) continue
+      const legacyResult = cells[4] ?? ''
+      const result = /within|pass|ok/i.test(legacyResult) ? 'Within limit' : /outside|fail/i.test(legacyResult) ? 'Outside limit' : legacyResult
+      checks.push({ time: cells[0] ?? '', item: cells[1] ?? '', actual: cells[2] ?? '', limit: cells[3] ?? '', result, action: cells[5] ?? '', initials: cells[6] ?? '' })
+    }
+  }
+  const notes = doc.content.match(/## Additional notes\s*\n([\s\S]*?)(?=\n## |$)/i)?.[1]?.trim() ?? ''
+  return { ...emptyTemperatureRecord, date: field('Date'), completedBy: field('Person completing checks'), checks: checks.length ? checks : [blankTemperatureCheck()], notes }
+}
+
+function temperatureRecordMarkdown(form: TemperatureRecordForm) {
+  const checks = form.checks.filter(check => Object.values(check).some(value => value.trim()))
+  const rows = checks.map(check => `| ${check.time || ''} | ${check.item || ''} | ${check.actual || ''} | ${check.limit || ''} | ${check.result || ''} | ${check.action || ''} | ${check.initials || ''} |`).join('\n')
+  return `# Daily Temperature Records\n\n**Date:** ${form.date || 'To be completed'}  \n**Person completing checks:** ${form.completedBy || 'To be completed'}\n\n| Time | Equipment / food | Actual temperature (°C) | Business limit | Result | Corrective action | Initials |\n| --- | --- | --- | --- | --- | --- | --- |\n${rows}\n\n${form.notes ? `## Additional notes\n${form.notes}\n\n` : ''}Record actual readings at the frequency set in your food safety procedures. Use a suitable, clean thermometer where required. Do not write a guessed reading. If a limit is missed, assess the food, take safe corrective action and record what happened. Set limits using current official guidance and the specific food and process.`
 }
 
 export default function App() {
   const [activeBusiness, setActiveBusiness] = useState('kitchen')
   const [page, setPage] = useState('overview')
-  const [docs, setDocs] = useState<Doc[]>(() => { try { const v = localStorage.getItem('bh-docs-v1'); return v ? JSON.parse(v) : initialDocs } catch { return initialDocs } })
+  const [docs, setDocs] = useState<Doc[]>(() => { try { const v = localStorage.getItem('bh-docs-v1'); return migratePolicyDocumentDocs(v ? JSON.parse(v) : initialDocs) } catch { return initialDocs } })
   const [safety, setSafety] = useState<SafetyItem[]>(() => { try { const v = localStorage.getItem('bh-safety-v1'); return v ? JSON.parse(v) : safetyInitial } catch { return safetyInitial } })
   useEffect(() => { setDocs(old => { const ids = new Set(old.map(d => d.id)); const additions = initialDocs.filter(d => d.id.startsWith('fs') && !ids.has(d.id)); return additions.length ? [...old, ...additions] : old }) }, [])
   const [search, setSearch] = useState('')
@@ -88,6 +200,7 @@ export default function App() {
   const [editorContent, setEditorContent] = useState('')
   const [overviewForm, setOverviewForm] = useState<OverviewForm>(emptyOverviewForm)
   const [policyForm, setPolicyForm] = useState<PolicyForm>(emptyPolicyForm)
+  const [temperatureForm, setTemperatureForm] = useState<TemperatureRecordForm>(emptyTemperatureRecord)
   const [showNew, setShowNew] = useState(false)
   const [newTitle, setNewTitle] = useState('')
   const [newCategory, setNewCategory] = useState('General')
@@ -106,8 +219,9 @@ export default function App() {
 
   function openEditor(doc: Doc) {
     setEditing(doc); setEditorTitle(doc.title); setEditorContent(doc.content);
-    if (doc.id === 'fs1') setOverviewForm(emptyOverviewForm);
-    if (doc.id === 'fs2') setPolicyForm(emptyPolicyForm);
+    if (doc.id === 'fs1' || /food safety management overview/i.test(doc.title.trim())) setOverviewForm(emptyOverviewForm);
+    if (isPolicyDocument(doc)) setPolicyForm(policyFormFromDocument(doc));
+    if (isDailyTemperatureDocument(doc)) setTemperatureForm(temperatureRecordFromDocument(doc));
     setPage('documents');
   }
   function overviewMarkdown() {
@@ -175,7 +289,19 @@ This is a working template, not a completed or approved food safety system. Conf
 **Additional notes:** ${f.notes || 'None entered'}
 
 ## 1. Food safety policy
-The Small Kitchen is committed to preparing, storing, transporting and serving food in a way that protects customers' health. The business will follow applicable food hygiene requirements, use safe working methods, provide accurate allergen information, maintain clean premises and equipment, and keep truthful, up-to-date records.
+${f.businessName || 'The business'} is committed to preparing, storing, transporting and serving food in a way that protects customers' health. The business will follow applicable food hygiene requirements, use safe working methods, provide accurate allergen information, maintain clean premises and equipment, and keep truthful, up-to-date records.
+
+## 2. Responsibilities
+**Owner / manager:** ${f.ownerResponsibilities}
+**Food handlers:** ${f.handlerResponsibilities}
+**Training and supervision:** ${f.training}
+**Cleaning and disinfection:** ${f.cleaningResponsibilities}
+**Allergen management:** ${f.allergenControl}
+**Cross-contamination prevention:** ${f.crossContamination}
+**Temperature control:** ${f.temperatureControl}
+**Record keeping:** ${f.recordKeeping}
+**Corrective actions and reporting problems:** ${f.correctiveActions}
+**Review frequency:** ${f.reviewFrequency}
 
 Food safety takes priority over speed of service or avoiding waste. If food safety cannot be assured, the affected food or activity must be stopped until the problem is assessed and corrected. Food must not be sold if it may be unsafe or its allergen information cannot be verified.
 
@@ -243,8 +369,11 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   }
   function saveEditor() {
     if (!editing) return
-    const contentToSave = editing.id === 'fs1' ? overviewMarkdown() : (editing.id === 'fs2' || /food safety policy and responsibilities/i.test(editing.title)) ? policyMarkdown() : editorContent;
-    setDocs(old => old.map(d => d.id === editing.id ? { ...d, title: editorTitle.trim() || 'Untitled document', content: contentToSave, updatedAt: new Date().toISOString() } : d))
+    const edited = { ...editing, title: editorTitle.trim() || editing.title }
+    const isPolicy = isPolicyDocument(edited)
+    const isTemperatureRecord = isDailyTemperatureDocument(edited)
+    const contentToSave = (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? overviewMarkdown() : isPolicy ? policyMarkdown() : isTemperatureRecord ? temperatureRecordMarkdown(temperatureForm) : editorContent;
+    setDocs(old => old.map(d => d.id === editing.id ? { ...d, title: editorTitle.trim() || 'Untitled document', content: contentToSave, ...(isPolicy ? { policyData: { ...policyForm } } : {}), ...(isTemperatureRecord ? { temperatureData: { ...temperatureForm } } : {}), updatedAt: new Date().toISOString() } : d))
     setEditing(null); setToast('Document saved on this device')
   }
   function createDoc() {
@@ -255,7 +384,17 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   function exportDoc(doc: Doc) {
     let blob: Blob; let filename = doc.title
     if (doc.type === 'file' && doc.fileData) { const parts = doc.fileData.split(','); const mime = doc.mimeType || 'application/octet-stream'; const binary = atob(parts[1] || ''); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); blob = new Blob([bytes], { type: mime }) }
-    else { blob = new Blob([doc.content], { type: 'text/markdown;charset=utf-8' }); if (!/\.(md|txt|csv|json)$/i.test(filename)) filename += '.md' }
+    else {
+      // Generated forms export their live values while the editor is open, not stale saved text.
+      const content = editing?.id === doc.id
+        ? doc.id === 'fs1' ? overviewMarkdown()
+          : isPolicyDocument(doc) ? policyMarkdown()
+          : isDailyTemperatureDocument(doc) ? temperatureRecordMarkdown(temperatureForm)
+          : doc.content
+        : doc.content
+      blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
+      if (!/\.(md|txt|csv|json)$/i.test(filename)) filename += '.md'
+    }
     const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url)
   }
   function uploadFiles(files: FileList | null) {
@@ -335,12 +474,12 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             </div>
           </section>
         </>}
-        {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{editing.id === 'fs1' ? <div className="overview-form">
+        {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{(editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
   <details className="overview-preview"><summary>Show the information that will be saved in the document</summary><pre>{overviewMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Complete the business details below</b><p>Use the dropdowns where available. If unsure, choose “To be confirmed” or leave the box blank rather than guessing.</p></div>
   <div className="overview-form-grid">
     <label className="field-label">Responsible person<input value={overviewForm.responsiblePerson} onChange={e => setOverviewForm(f => ({...f, responsiblePerson:e.target.value}))} placeholder="Full name"/></label>
-    <label className="field-label">Business<select value={policyForm.businessName} onChange={e => setPolicyForm(f => ({...f, businessName:e.target.value}))}><option value="">Choose business</option><option>The Small Kitchen</option><option>Other / to be confirmed</option></select></label><label className="field-label">Business / correspondence address<input value={overviewForm.businessAddress} onChange={e => setOverviewForm(f => ({...f, businessAddress:e.target.value}))} placeholder="Business address"/></label>
+    <label className="field-label">Business<select value={overviewForm.businessName} onChange={e => setOverviewForm(f => ({...f, businessName:e.target.value}))}><option value="">Choose business</option><option>The Small Kitchen</option><option>Other / to be confirmed</option></select></label><label className="field-label">Business / correspondence address<input value={overviewForm.businessAddress} onChange={e => setOverviewForm(f => ({...f, businessAddress:e.target.value}))} placeholder="Business address"/></label>
     <label className="field-label">Contact telephone<input type="tel" value={overviewForm.contactPhone} onChange={e => setOverviewForm(f => ({...f, contactPhone:e.target.value}))} placeholder="Telephone number"/></label>
     <label className="field-label">Contact email<input type="email" value={overviewForm.contactEmail} onChange={e => setOverviewForm(f => ({...f, contactEmail:e.target.value}))} placeholder="Email address"/></label>
     <label className="field-label">Intended trading location<input value={overviewForm.tradingLocation} onChange={e => setOverviewForm(f => ({...f, tradingLocation:e.target.value}))} placeholder="Pitch / site, or 'to be confirmed'"/></label>
@@ -357,13 +496,14 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   </div>
   <label className="field-label overview-notes-label">Additional notes<textarea className="overview-notes" value={overviewForm.notes} onChange={e => setOverviewForm(f => ({...f, notes:e.target.value}))} placeholder="Equipment, food transport, operating hours, council advice or anything needing confirmation"/></label>
   <div className="overview-guidance"><b>Before saving</b><ul><li>Confirm home preparation arrangements with the local authority before relying on them.</li><li>Use current supplier labels and actual recipes for allergen information.</li><li>Choose procedures and temperature limits appropriate to your actual food and process; do not rely on guessed limits.</li><li>This overview is a starter document and does not replace required records or council permissions.</li></ul></div>
- : (editing.id === 'fs2' || /food safety policy and responsibilities/i.test(editing.title)) ? <div className="overview-form policy-form">
-  <section className="policy-saved-preview"><h3>Show the information that will be saved in the document</h3><pre>{policyMarkdown()}</pre></section>
+  </div>
+ : (isPolicyDocument(editing) || editorTitle.toLowerCase().includes("food safety policy and responsibilities")) ? <div className="overview-form policy-form">
+  <details className="overview-preview policy-saved-preview"><summary>Show the information that will be saved in the document</summary><pre>{policyMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Food Safety Policy and Responsibilities</b><p>Complete the business details, assign responsibilities, and review the policy with anyone who handles food. Leave anything unknown as “To be completed” rather than guessing.</p></div>
   <div className="overview-form-grid">
     <label className="field-label">Food safety lead<select value={policyForm.foodSafetyLead} onChange={e => setPolicyForm(f => ({...f, foodSafetyLead:e.target.value}))}><option value="">Choose food safety lead</option><option>Business owner</option><option>Named food safety supervisor</option><option>To be confirmed</option></select></label><label className="field-label">Food safety lead name / details<input value={policyForm.foodSafetyLeadName} onChange={e => setPolicyForm(f => ({...f, foodSafetyLeadName:e.target.value}))} placeholder="Name of owner / responsible person"/></label>
     <label className="field-label">Deputy / cover<select value={policyForm.deputy} onChange={e => setPolicyForm(f => ({...f, deputy:e.target.value}))}><option value="">Choose cover arrangement</option><option>No deputy — owner covers</option><option>Named deputy</option><option>Not applicable</option><option>To be confirmed</option></select></label>
-    <label className="field-label">Business<select value={policyForm.businessName} onChange={e => setPolicyForm(f => ({...f, businessName:e.target.value}))}><option value="">Choose business</option><option>The Small Kitchen</option><option>Other / to be confirmed</option></select></label><label className="field-label">Business / correspondence address<input value={policyForm.businessAddress} onChange={e => setPolicyForm(f => ({...f, businessAddress:e.target.value}))} placeholder="Business address"/></label>
+    <label className="field-label">Business name<input value={policyForm.businessName} onChange={e => setPolicyForm(f => ({...f, businessName:e.target.value}))} placeholder="Business name"/></label><label className="field-label">Business / correspondence address<input value={policyForm.businessAddress} onChange={e => setPolicyForm(f => ({...f, businessAddress:e.target.value}))} placeholder="Business address"/></label>
     <label className="field-label">Intended trading location<input value={policyForm.tradingLocation} onChange={e => setPolicyForm(f => ({...f, tradingLocation:e.target.value}))} placeholder="Pitch / site or to be confirmed"/></label>
     <label className="field-label">Effective date<input type="date" value={policyForm.effectiveDate} onChange={e => setPolicyForm(f => ({...f, effectiveDate:e.target.value}))}/></label>
     <label className="field-label">Review date<input type="date" value={policyForm.reviewDate} onChange={e => setPolicyForm(f => ({...f, reviewDate:e.target.value}))}/></label>
@@ -375,10 +515,13 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
     <label className="field-label">Record keeping<select value={policyForm.recordKeeping} onChange={e => setPolicyForm(f => ({...f, recordKeeping:e.target.value}))}><option>Complete records at the time checks are made; record actual results and corrective actions</option><option>Use daily checklists and keep temperature, cleaning, delivery and corrective-action records</option><option>Record-keeping procedure still to be confirmed</option></select></label>
     <label className="field-label">Policy review frequency<select value={policyForm.reviewFrequency} onChange={e => setPolicyForm(f => ({...f, reviewFrequency:e.target.value}))}><option>At least annually and whenever the menu, process, equipment, premises or staff change</option><option>Every six months and whenever a significant change occurs</option><option>Whenever a significant change occurs; set a routine review date</option></select></label>
   </div>
+  <label className="field-label">Owner / manager responsibilities<textarea value={policyForm.ownerResponsibilities} onChange={e => setPolicyForm(f => ({...f, ownerResponsibilities:e.target.value}))}/></label><label className="field-label">Food handler responsibilities<textarea value={policyForm.handlerResponsibilities} onChange={e => setPolicyForm(f => ({...f, handlerResponsibilities:e.target.value}))}/></label>
+  <label className="field-label">Cleaning and disinfection responsibilities<textarea value={policyForm.cleaningResponsibilities} onChange={e => setPolicyForm(f => ({...f, cleaningResponsibilities:e.target.value}))}/></label><label className="field-label">Cross-contamination prevention<textarea value={policyForm.crossContamination} onChange={e => setPolicyForm(f => ({...f, crossContamination:e.target.value}))}/></label>
+  <label className="field-label">Temperature control<textarea value={policyForm.temperatureControl} onChange={e => setPolicyForm(f => ({...f, temperatureControl:e.target.value}))}/></label><label className="field-label">Corrective actions and reporting problems<textarea value={policyForm.correctiveActions} onChange={e => setPolicyForm(f => ({...f, correctiveActions:e.target.value}))}/></label>
   <label className="field-label">Policy wording / business-specific rules<textarea value={policyForm.policyNotes || ""} onChange={e => setPolicyForm(f => ({...f, policyNotes:e.target.value}))} placeholder="Add rules specific to your menu, equipment and working methods"/></label><label className="field-label">Responsibilities and assigned shifts<textarea value={policyForm.shiftResponsibilities || ""} onChange={e => setPolicyForm(f => ({...f, shiftResponsibilities:e.target.value}))} placeholder="Who checks opening, service, closing, cleaning and records"/></label><label className="field-label">Illness reporting and action<textarea value={policyForm.illnessNotes || ""} onChange={e => setPolicyForm(f => ({...f, illnessNotes:e.target.value}))} placeholder="Who must be told, and how the person is kept away from food handling"/></label><label className="field-label">Records and reporting<textarea value={policyForm.recordNotes || ""} onChange={e => setPolicyForm(f => ({...f, recordNotes:e.target.value}))} placeholder="Who completes checks, records problems and reports corrective actions"/></label><label className="field-label">Additional notes<textarea className="overview-notes" value={policyForm.notes} onChange={e => setPolicyForm(f => ({...f, notes:e.target.value}))} placeholder="Add role-specific duties, deputy arrangements, review notes or local-authority advice"/></label>
   <div className="overview-guidance"><b>Before approving this policy</b><ul><li>Enter the actual names and dates and make sure the responsibilities reflect how your business operates.</li><li>Explain the policy to everyone who handles food and keep training or induction evidence where applicable.</li><li>Check your separate allergen, cleaning, temperature, illness and corrective-action procedures are in place.</li><li>Do not sign off arrangements that are not yet operating; complete the missing procedures before relying on them.</li></ul></div>
   <details className="overview-preview"><summary>Show the policy that will be saved in the document</summary><pre>{policyMarkdown()}</pre></details>
-</div></div> : <label className="field-label">Document content<textarea className="editor-textarea" value={editorContent} onChange={e => setEditorContent(e.target.value)} placeholder="Write your document here..." spellCheck/></label>}<div className="editor-footer"><span className="autosave-note"><Check size={15}/> Local draft is available</span><div className="button-row"><button className="button secondary" onClick={() => exportDoc({ ...editing, title: editorTitle, content: editorContent })}><ArrowDownToLine size={16}/>Export .md</button><button className="button primary" onClick={saveEditor}>Save changes</button></div></div><p className="editor-note">This first version edits plain text/Markdown. Word and PDF round-trip editing will be added separately; imported binary files are not stored by this prototype.</p></section> : <><div className="library-toolbar"><div className="search-box"><Search size={17}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search documents..."/></div><button className="button secondary" onClick={() => fileInput.current?.click()}><ArrowUpFromLine size={16}/>Import file</button></div><section className="panel library-panel"><div className="library-table-head"><span>NAME</span><span>CATEGORY</span><span>UPDATED</span><span>ACTIONS</span></div>{filteredDocs.map(doc => <div className="library-row" key={doc.id}><button className="library-name" onClick={() => doc.type === 'file' ? setToast('This file type is not editable in the current prototype.') : openEditor(doc)}><span className={`file-icon ${doc.type === 'record' ? 'file-record' : ''}`}><FileText size={18}/></span><span><b>{doc.title}</b><small>{doc.type === 'record' ? 'Record template' : doc.type === 'file' ? 'File reference' : 'Editable document'}</small></span></button><span className="category-cell">{doc.category}</span><span className="updated-cell">{prettyDate(doc.updatedAt)}</span><div className="row-actions"><button className="icon-button" onClick={() => exportDoc(doc)} aria-label={`Export ${doc.title}`}><ArrowDownToLine size={17}/></button><button className="icon-button" onClick={() => doc.type === 'file' ? setToast('Binary files can be downloaded, but preview/editing is not included yet.') : openEditor(doc)} aria-label={`Edit ${doc.title}`}><Pencil size={16}/></button></div></div>)}{filteredDocs.length === 0 && <EmptyState title="Nothing found" text="Try another search or create a new document."/>}</section><div className="library-footnote"><ShieldCheck size={16}/> Your documents are currently stored in this browser only. Connect cloud storage before using this for important records.</div></>}</>}
+</div> : isDailyTemperatureDocument(editing) ? <TemperatureRecordEditor value={temperatureForm} onChange={setTemperatureForm}/> : <label className="field-label">Document content<textarea className="editor-textarea" value={editorContent} onChange={e => setEditorContent(e.target.value)} placeholder="Write your document here..." spellCheck/></label>}<div className="editor-footer"><span className="autosave-note"><Check size={15}/> Local draft is available</span><div className="button-row"><button className="button secondary" onClick={() => exportDoc({ ...editing, title: editorTitle, content: editorContent })}><ArrowDownToLine size={16}/>Export .md</button><button className="button primary" onClick={saveEditor}>Save changes</button></div></div>{!(isPolicyDocument(editing) || isDailyTemperatureDocument(editing)) && <p className="editor-note">This first version edits plain text/Markdown. Word and PDF round-trip editing will be added separately; imported binary files are not stored by this prototype.</p>}</section> : <><div className="library-toolbar"><div className="search-box"><Search size={17}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search documents..."/></div><button className="button secondary" onClick={() => fileInput.current?.click()}><ArrowUpFromLine size={16}/>Import file</button></div><section className="panel library-panel"><div className="library-table-head"><span>NAME</span><span>CATEGORY</span><span>UPDATED</span><span>ACTIONS</span></div>{filteredDocs.map(doc => <div className="library-row" key={doc.id}><button className="library-name" onClick={() => doc.type === 'file' ? setToast('This file type is not editable in the current prototype.') : openEditor(doc)}><span className={`file-icon ${doc.type === 'record' ? 'file-record' : ''}`}><FileText size={18}/></span><span><b>{doc.title}</b><small>{doc.type === 'record' ? 'Record template' : doc.type === 'file' ? 'File reference' : 'Editable document'}</small></span></button><span className="category-cell">{doc.category}</span><span className="updated-cell">{prettyDate(doc.updatedAt)}</span><div className="row-actions"><button className="icon-button" onClick={() => exportDoc(doc)} aria-label={`Export ${doc.title}`}><ArrowDownToLine size={17}/></button><button className="icon-button" onClick={() => doc.type === 'file' ? setToast('Binary files can be downloaded, but preview/editing is not included yet.') : openEditor(doc)} aria-label={`Edit ${doc.title}`}><Pencil size={16}/></button></div></div>)}{filteredDocs.length === 0 && <EmptyState title="Nothing found" text="Try another search or create a new document."/>}</section><div className="library-footnote"><ShieldCheck size={16}/> Your documents are currently stored in this browser only. Connect cloud storage before using this for important records.</div></>}</>}
         {page === 'safety' && <><div className="page-heading-row"><div><div className="eyebrow">THE SMALL KITCHEN</div><h1>Food Safety Centre</h1><p className="page-subtitle">Build and maintain the working documents for your food trailer.</p></div><button className="button secondary" onClick={() => { const doc = docs.find(d => d.id === 'd1'); if (doc) openEditor(doc) }}><FileText size={16}/>Open management pack</button></div><div className="safety-banner"><div className="safety-banner-icon"><ShieldCheck size={25}/></div><div className="safety-banner-copy"><h2>Your food safety pack</h2><p>A structured starting point for your procedures and records. Tick a section when the actual document has been prepared and reviewed.</p></div><div className="safety-progress"><strong>{totalDone}/{safety.length}</strong><span>Sections checked</span></div></div><section className="panel safety-panel"><div className="panel-heading"><div><h3>Pack setup checklist</h3><p>Progress is saved in this browser.</p></div><span className="progress-tag">{Math.round(totalDone / safety.length * 100)}% complete</span></div><div className="progress-track"><div style={{ width: `${totalDone / safety.length * 100}%` }}/></div><div className="safety-list">{safety.map(item => <label key={item.id} className={`safety-row ${item.done ? 'checked' : ''}`}><input type="checkbox" checked={item.done} onChange={e => setSafety(old => old.map(s => s.id === item.id ? { ...s, done: e.target.checked } : s))}/><span className="safety-checkbox"><Check size={14}/></span><span className="safety-text"><b>{item.title}</b><small>{item.detail}</small></span><span className={`status-pill ${item.done ? 'status-done' : 'status-todo'}`}>{item.done ? 'Marked complete' : 'To review'}</span></label>)}</div></section><div className="notice-card"><CircleHelp size={19}/><p><b>Important:</b> this checklist is an organisational aid, not proof of compliance. Use current Food Standards Agency guidance and ensure your procedures reflect your actual menu, equipment, food preparation locations and working practices. Never guess allergen details or mark a safety check complete unless it has actually been done.</p></div><section className="panel safety-docs-panel"><div className="panel-heading"><div><h3>Starter documents</h3><p>Open and adapt the templates for your setup.</p></div><button className="text-link" onClick={() => navigate('documents')}>View all <ChevronRight size={15}/></button></div>{businessDocs.filter(d => ['Food safety','Daily records','Temperature records','Allergens'].includes(d.category)).map(doc => <DocumentRow key={doc.id} doc={doc} onOpen={openEditor} onExport={exportDoc}/>)}</section></>}
         {page === 'safety-folder' && <><div className="page-heading-row safety-folder-page-heading"><div><div className="eyebrow">THE SMALL KITCHEN · FOLDER 1</div><h1>Food Safety Management</h1><p className="page-subtitle">Your main food safety paperwork. Open a template to edit it, then save or export a copy for your records.</p></div><div className="page-heading-actions"><button className="button primary" onClick={() => { setNewCategory('Folder 1 — Food Safety Management'); setShowNew(true) }}><Plus size={17}/>Add document</button></div></div><div className="safety-banner"><div className="safety-banner-icon"><ShieldCheck size={25}/></div><div className="safety-banner-copy"><h2>Food Safety Management</h2><p>Keep policies, procedures and completed monitoring records together. These are starter templates: adapt them to your actual trailer, menu, equipment and working methods before use.</p></div><div className="safety-progress"><strong>{businessDocs.filter(d => d.category === 'Folder 1 — Food Safety Management').length}</strong><span>Documents</span></div></div><section className="panel library-panel"><div className="library-table-head"><span>DOCUMENT</span><span>CATEGORY</span><span>UPDATED</span><span>ACTIONS</span></div>{businessDocs.filter(d => d.category === 'Folder 1 — Food Safety Management').map(doc => <div className="library-row" key={doc.id}><button className="library-name" onClick={() => openEditor(doc)}><span className={`file-icon ${doc.type === 'record' ? 'file-record' : ''}`}><FileText size={18}/></span><span><b>{doc.title}</b><small>{doc.type === 'record' ? 'Record template' : 'Editable document'}</small></span></button><span className="category-cell">Food safety</span><span className="updated-cell">{prettyDate(doc.updatedAt)}</span><div className="row-actions"><button className="icon-button" onClick={() => exportDoc(doc)} aria-label={`Export ${doc.title}`}><ArrowDownToLine size={17}/></button><button className="icon-button" onClick={() => openEditor(doc)} aria-label={`Edit ${doc.title}`}><Pencil size={16}/></button></div></div>)}</section><div className="notice-card"><CircleHelp size={19}/><p><b>Important:</b> these are blank starter templates, not completed compliance records or official approval. Record real checks accurately and use current Food Standards Agency guidance. Verify all allergen details against the actual recipes and supplier labels.</p></div></>}
         {page === 'businesses' && <><div className="page-heading-row"><div><div className="eyebrow">WORKSPACE MANAGEMENT</div><h1>My businesses</h1><p className="page-subtitle">Keep documents and working records separated by business.</p></div></div><div className="business-card-grid">{businesses.map(b => <button key={b.id} className={`business-card ${activeBusiness === b.id ? 'business-card-active' : ''}`} onClick={() => { setActiveBusiness(b.id); setPage('overview'); setEditing(null) }}><div className={`business-card-icon ${b.color}`}>{b.id === 'kitchen' ? <BriefcaseBusiness size={23}/> : b.id === 'events' ? <Sparkles size={23}/> : <House size={23}/>}</div><div className="business-card-copy"><b>{b.name}</b><span>{b.subtitle}</span><small>{docs.filter(d => d.businessId === b.id).length} documents in this browser</small></div><ChevronRight size={18}/></button>)}</div><div className="notice-card"><Users size={19}/><p><b>Team access is not connected yet.</b> Secure invitations, roles and shared access will be added with authentication and the cloud database. The current demo profile is local to this browser.</p></div></>}
@@ -389,7 +532,40 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   </div>
 }
 
+function TemperatureRecordEditor({ value, onChange }: { value: TemperatureRecordForm; onChange: (value: TemperatureRecordForm) => void }) {
+  const updateCheck = (index: number, key: keyof TemperatureCheck, next: string) => onChange({ ...value, checks: value.checks.map((check, i) => i === index ? { ...check, [key]: next } : check) })
+  return <div className="overview-form temperature-record-form">
+    <div className="overview-form-intro"><b>Daily temperature checks</b><p>Record actual readings against the limits in your own food safety procedures. Do not guess or use one limit for every food or process.</p></div>
+    <div className="overview-form-grid">
+      <label className="field-label">Date<input type="date" value={value.date} onChange={e => onChange({ ...value, date: e.target.value })}/></label>
+      <label className="field-label">Person completing checks<input value={value.completedBy} onChange={e => onChange({ ...value, completedBy: e.target.value })} placeholder="Name or initials"/></label>
+    </div>
+    <div className="temperature-check-list"><div className="temperature-check-list-heading"><div><h3>Readings</h3><p>Add a row for each check made today.</p></div><button className="button secondary" type="button" onClick={() => onChange({ ...value, checks: [...value.checks, blankTemperatureCheck()] })}><Plus size={16}/>Add reading</button></div>
+      {value.checks.map((check, index) => <section className="temperature-check-card" key={index}><div className="temperature-check-card-heading"><b>Reading {index + 1}</b>{value.checks.length > 1 && <button className="text-link temperature-remove" type="button" onClick={() => onChange({ ...value, checks: value.checks.filter((_, i) => i !== index) })}>Remove</button>}</div>
+        <div className="temperature-check-grid">
+          <label className="field-label">Time<input type="time" value={check.time} onChange={e => updateCheck(index, 'time', e.target.value)}/></label>
+          <label className="field-label">Equipment / food<input value={check.item} onChange={e => updateCheck(index, 'item', e.target.value)} placeholder="e.g. fridge, cooked batch, delivery"/></label>
+          <label className="field-label">Actual temperature (°C)<input type="number" step="0.1" inputMode="decimal" value={check.actual} onChange={e => updateCheck(index, 'actual', e.target.value)} placeholder="Actual reading"/></label>
+          <label className="field-label">Business limit<input value={check.limit} onChange={e => updateCheck(index, 'limit', e.target.value)} placeholder="From your procedure"/></label>
+          <label className="field-label">Result<select value={check.result} onChange={e => updateCheck(index, 'result', e.target.value)}><option value="">Choose result</option><option>Within limit</option><option>Outside limit</option><option>Not applicable</option></select></label>
+          <label className="field-label temperature-action-field">Corrective action<textarea value={check.action} onChange={e => updateCheck(index, 'action', e.target.value)} placeholder="If outside limit, record action and follow-up"/></label>
+          <label className="field-label">Initials<input value={check.initials} onChange={e => updateCheck(index, 'initials', e.target.value)} placeholder="Initials"/></label>
+        </div>
+      </section>)}
+    </div>
+    <label className="field-label">Additional notes<textarea className="overview-notes" value={value.notes} onChange={e => onChange({ ...value, notes: e.target.value })} placeholder="Follow-up, equipment concerns or other relevant details"/></label>
+    <div className="overview-guidance"><b>Record keeping</b><ul><li>Use the limits and check frequency from your current procedures; they depend on the food and process.</li><li>Record real readings at the time of the check, including a zero only when that is the actual reading.</li><li>For an out-of-limit result, protect customers, assess affected food, record the action and note who verified it.</li><li>Use a suitable, clean thermometer where required by the procedure.</li></ul></div>
+    <details className="overview-preview"><summary>Show the record that will be saved</summary><pre>{temperatureRecordMarkdown(value)}</pre></details>
+  </div>
+}
+
 function DocumentRow({ doc, onOpen, onExport }: { doc: Doc; onOpen: (doc: Doc) => void; onExport: (doc: Doc) => void }) {
   return <div className="document-row"><button className={`doc-type-icon ${doc.type === 'record' ? 'doc-type-gold' : ''}`} onClick={() => doc.type === 'file' ? undefined : onOpen(doc)} aria-label={`Open ${doc.title}`}><FileText size={18}/></button><button className="doc-row-main" onClick={() => doc.type === 'file' ? undefined : onOpen(doc)}><b>{doc.title}</b><span>{doc.category} <i>•</i> {prettyDate(doc.updatedAt)}</span></button><button className="icon-button row-export" onClick={() => onExport(doc)} aria-label={`Export ${doc.title}`}><ArrowDownToLine size={17}/></button><button className="icon-button row-open" onClick={() => doc.type === 'file' ? undefined : onOpen(doc)} aria-label={`Edit ${doc.title}`}><ChevronRight size={18}/></button></div>
 }
 function EmptyState({ title, text }: { title: string; text: string }) { return <div className="empty-state"><div><Folder size={22}/></div><b>{title}</b><p>{text}</p></div> }
+
+
+
+
+
+

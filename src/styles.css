@@ -808,3 +808,61 @@ section.editor-panel .button.secondary {
   .editor-panel .policy-form { padding:18px 14px 22px !important; }
   .editor-panel .policy-form .overview-form-grid { grid-template-columns:minmax(0,1fr) !important; gap:20px !important; }
 }
+
+
+/* Local-test fix: the Food Safety Policy editor uses the same expandable live preview as the overview. */
+.editor-panel .policy-form .policy-saved-preview {
+  display: block;
+  background: #11110f !important;
+  border: 1px solid #d5a83e !important;
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin: 0;
+  color: #ffd36a !important;
+  font-family: Arial, sans-serif;
+}
+.editor-panel .policy-form .policy-saved-preview summary {
+  cursor: pointer;
+  font-weight: 650;
+  color: #ffd36a !important;
+}
+.editor-panel .policy-form .policy-saved-preview pre {
+  margin-top: 12px;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #fff !important;
+  font: 13px/1.6 Arial, sans-serif;
+}
+.editor-panel .policy-form .overview-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.editor-panel .policy-form .field-label {
+  min-width: 0;
+  margin-bottom: 0;
+}
+@media (max-width: 640px) {
+  .editor-panel .policy-form .overview-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.temperature-check-list { display: grid; gap: 12px; }
+.temperature-check-list-heading, .temperature-check-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.temperature-check-list-heading h3 { margin: 0; color: #fff; font-size: 16px; }
+.temperature-check-list-heading p { margin: 4px 0 0; color: #bdc8c1; font-size: 13px; }
+.temperature-check-card { padding: 15px; border: 1px solid rgba(255,255,255,.12); border-radius: 13px; background: rgba(255,255,255,.035); }
+.temperature-check-card-heading { margin-bottom: 13px; color: #f2c45b; }
+.temperature-check-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+.temperature-check-grid .field-label { min-width: 0; margin-bottom: 0; }
+.temperature-action-field { grid-column: span 2; }
+.temperature-remove { color: #ffb5a8; }
+.temperature-record-form .overview-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.temperature-record-form .overview-preview summary { cursor: pointer; color: #ffd36a; font-weight: 650; }
+.temperature-record-form .overview-preview pre { max-height: 320px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: #fff; font: 13px/1.6 Arial, sans-serif; }
+@media (max-width: 760px) {
+  .temperature-check-grid, .temperature-record-form .overview-form-grid { grid-template-columns: minmax(0, 1fr); }
+  .temperature-action-field { grid-column: auto; }
+  .temperature-check-list-heading { align-items: flex-start; flex-direction: column; }
+}
