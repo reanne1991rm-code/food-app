@@ -982,6 +982,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
         <button className={page === 'transport-folder' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('transport-folder')}><BriefcaseBusiness size={18}/>Folder 4 — Home Preparation &amp; Transport<span className="nav-count">{transportFolderDocs.length}</span></button>
         <button className={page === 'business-paperwork-folder' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('business-paperwork-folder')}><FileText size={18}/>Folder 5 — Business &amp; Council Paperwork<span className="nav-count">{businessPaperworkDocs.length}</span></button>
         <button className={page === 'extras-folder' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('extras-folder')}><BookOpenCheck size={18}/>Folder 6 — Extras<span className="nav-count">{extrasDocs.length}</span></button>
+        <button className={page === 'finance-folder' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('finance-folder')}><BriefcaseBusiness size={18}/>Expenses &amp; Income</button>
         <button className={page === 'businesses' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('businesses')}><Building2 size={18}/>My businesses</button>
       </nav>
       <div className="nav-label nav-label-spaced">YOUR BUSINESSES</div>
@@ -990,7 +991,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
     </aside>
     {mobileMenu && <button className="mobile-scrim" onClick={() => setMobileMenu(false)} aria-label="Close navigation"/>}
     <main className="main-area">
-      <header className="topbar"><div className="topbar-left"><button className="icon-button mobile-menu-button" onClick={() => setMobileMenu(true)} aria-label="Open menu"><Menu size={20}/></button><div className="breadcrumbs"><span>Workspace</span><ChevronRight size={14}/><b>{page === 'overview' ? 'Overview' : page === 'documents' ? 'Document library' : page === 'safety' ? 'Food Safety Centre' : page === 'safety-folder' ? 'Folder 1 — Food Safety Management' : page === 'handling-folder' ? 'Folder 2 — Food Handling & Storage' : page === 'cleaning-folder' ? 'Folder 3 — Cleaning & Sanitising' : page === 'transport-folder' ? 'Folder 4 — Home Preparation & Transport' : page === 'business-paperwork-folder' ? 'Folder 5 — Business & Council Paperwork' : page === 'extras-folder' ? 'Folder 6 — Extras' : 'My businesses'}</b></div></div><div className="topbar-actions"><button className="button secondary topbar-home-button" onClick={() => { setEditing(null); setShowNew(false); setPage('overview'); setSearch(''); setMobileMenu(false) }}><House size={16}/>Home</button><div className={`connection-pill ${online ? 'online' : 'offline'}`}>{online ? <Wifi size={14}/> : <WifiOff size={14}/>}<span>{online ? 'Local mode' : 'Offline'}</span></div><button className="icon-button notification-button" onClick={() => setToast('No new notifications. Cloud reminders will be added in a later version.')} aria-label="Notifications"><Bell size={19}/><i/></button><div className="avatar avatar-small">RM</div></div></header>
+      <header className="topbar"><div className="topbar-left"><button className="icon-button mobile-menu-button" onClick={() => setMobileMenu(true)} aria-label="Open menu"><Menu size={20}/></button><div className="breadcrumbs"><span>Workspace</span><ChevronRight size={14}/><b>{page === 'overview' ? 'Overview' : page === 'documents' ? 'Document library' : page === 'safety' ? 'Food Safety Centre' : page === 'safety-folder' ? 'Folder 1 — Food Safety Management' : page === 'handling-folder' ? 'Folder 2 — Food Handling & Storage' : page === 'cleaning-folder' ? 'Folder 3 — Cleaning & Sanitising' : page === 'transport-folder' ? 'Folder 4 — Home Preparation & Transport' : page === 'business-paperwork-folder' ? 'Folder 5 — Business & Council Paperwork' : page === 'extras-folder' ? 'Folder 6 — Extras' : page === 'finance-folder' ? 'Expenses & Income' : 'My businesses'}</b></div></div><div className="topbar-actions"><button className="button secondary topbar-home-button" onClick={() => { setEditing(null); setShowNew(false); setPage('overview'); setSearch(''); setMobileMenu(false) }}><House size={16}/>Home</button><div className={`connection-pill ${online ? 'online' : 'offline'}`}>{online ? <Wifi size={14}/> : <WifiOff size={14}/>}<span>{online ? 'Local mode' : 'Offline'}</span></div><button className="icon-button notification-button" onClick={() => setToast('No new notifications. Cloud reminders will be added in a later version.')} aria-label="Notifications"><Bell size={19}/><i/></button><div className="avatar avatar-small">RM</div></div></header>
       <div className="page-content">
         {page === 'overview' && <>
           <section className="sk-welcome">
@@ -1025,6 +1026,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             <button className="sk-folder-card sk-folder-slate" onClick={() => navigate('extras-folder')}>
               <span className="sk-folder-number sk-folder-number-text"><FileText size={23}/></span><span className="sk-folder-icon"><BookOpenCheck size={27}/></span><span className="sk-folder-copy"><b>Extras</b><small>Editable templates, useful forms and additional resources.</small></span><ChevronRight className="sk-folder-arrow" size={21}/>
             </button>
+            <button className="sk-folder-card sk-folder-purple" onClick={() => navigate('finance-folder')}><span className="sk-folder-number"><BriefcaseBusiness size={21}/></span><span className="sk-folder-icon"><FileText size={27}/></span><span className="sk-folder-copy"><b>Expenses &amp; Income</b><small>Track sales and outgoings, view monthly trends and import SumUp transactions.</small></span><ChevronRight className="sk-folder-arrow" size={21}/></button>
           </section>
           <section className="sk-quick-links">
             <div className="sk-section-heading compact"><div><div className="eyebrow">QUICK ACCESS</div><h2>Useful tools</h2></div></div>
@@ -1036,6 +1038,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
             </div>
           </section>
         </>}
+        {page === 'finance-folder' && <FinanceDashboard businessId={activeBusiness} businessName={active.name}/>}
         {page === 'documents' && <><div className="page-heading-row"><div><div className="eyebrow">YOUR FILES</div><h1>Document library</h1><p className="page-subtitle">Create and organise working documents for {active.name}.</p></div><button className="button primary" onClick={() => setShowNew(true)}><Plus size={17}/>New document</button></div>{editing ? <section className="panel editor-panel"><div className="editor-top"><div><span className="eyebrow">DOCUMENT EDITOR</span><h2>Edit document</h2><p>Changes are saved in this browser on this device.</p></div><button className="icon-button" onClick={() => setEditing(null)} aria-label="Close editor"><X size={19}/></button></div><label className="field-label">Document title<input value={editorTitle} onChange={e => setEditorTitle(e.target.value)} placeholder="Document title"/></label>{isManagementPackDocument(editing) ? <ManagementPackEditor value={managementPackForm} onChange={setManagementPackForm}/> : (editing.id === 'fs1' || /food safety management overview/i.test(editorTitle.trim())) ? <div className="overview-form">
   <details className="overview-preview"><summary>Show the information that will be saved in the document</summary><pre>{overviewMarkdown()}</pre></details>
   <div className="overview-form-intro"><b>Complete the business details below</b><p>Use the dropdowns where available. If unsure, choose “To be confirmed” or leave the box blank rather than guessing.</p></div>
@@ -1289,6 +1292,190 @@ function TrainingRecordsEditor({ value, onChange }: { value: TrainingRecordsForm
     <label className="field-label">Additional notes<textarea className="overview-notes" value={value.notes} onChange={e => onChange({ ...value, notes: e.target.value })} placeholder="Training arrangements, group briefings or review notes"/></label>
     <div className="overview-guidance"><b>Keep the record useful</b><ul><li>Match training to the food-handling tasks and responsibilities each person actually performs.</li><li>Use the status accurately. Enter a completion date only after the training or briefing has taken place.</li><li>Keep certificates or other evidence and record where they can be found.</li><li>Plan refreshers or extra supervision when needed and review after procedures, duties or equipment change.</li></ul><p>This log records instruction and follow-up; it does not by itself certify a person's competence.</p></div>
     <details className="overview-preview"><summary>Show the records that will be saved</summary><pre>{trainingRecordsMarkdown(value)}</pre></details>
+  </div>
+}
+
+type FinanceTransaction = { id: string; kind: 'income' | 'expense'; date: string; amount: number; description: string; category: string; counterparty: string; method: string; reference: string; notes: string; source: 'manual' | 'sumup' }
+function parseFinanceCsv(text: string): FinanceTransaction[] {
+  const rows: string[][] = []
+  let row: string[] = [], cell = '', quoted = false
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i]
+    if (char === '"' && quoted && text[i + 1] === '"') { cell += '"'; i++ }
+    else if (char === '"') quoted = !quoted
+    else if (char === ',' && !quoted) { row.push(cell.trim()); cell = '' }
+    else if ((char === '\n' || char === '\r') && !quoted) {
+      if (char === '\r' && text[i + 1] === '\n') i++
+      row.push(cell.trim()); if (row.some(Boolean)) rows.push(row)
+      row = []; cell = ''
+    } else cell += char
+  }
+  row.push(cell.trim()); if (row.some(Boolean)) rows.push(row)
+  if (rows.length < 2) return []
+  const headers = rows[0].map(value => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim())
+  const find = (aliases: string[]) => headers.findIndex(header => aliases.some(alias => header === alias || header.includes(alias)))
+  const amountIndex = find(['amount', 'gross amount', 'transaction amount'])
+  const dateIndex = find(['date', 'timestamp', 'transaction date', 'time'])
+  const idIndex = find(['transaction id', 'transaction code', 'id', 'reference'])
+  const statusIndex = find(['status', 'transaction status'])
+  const currencyIndex = find(['currency'])
+  const descriptionIndex = find(['description', 'product', 'payment type'])
+  if (amountIndex < 0) return []
+  return rows.slice(1).flatMap((values, index) => {
+    const amountText = (values[amountIndex] || '').replace(/[£€$ ]/g, '')
+    const amount = Number(amountText.includes('.') ? amountText.replaceAll(',', '') : amountText.replace(',', '.'))
+    const status = statusIndex >= 0 ? values[statusIndex]?.toLowerCase() || '' : ''
+    if (!Number.isFinite(amount) || amount <= 0 || /cancel|fail|refund|charge.?back|pending/.test(status)) return []
+    const rawDate = dateIndex >= 0 ? values[dateIndex] : ''
+    const parsedDate = rawDate ? new Date(rawDate) : new Date()
+    const date = Number.isNaN(parsedDate.getTime()) ? new Date().toISOString().slice(0, 10) : parsedDate.toISOString().slice(0, 10)
+    const reference = idIndex >= 0 ? values[idIndex] || '' : ''
+    const currency = currencyIndex >= 0 ? values[currencyIndex] || '' : ''
+    if (currency && currency.toUpperCase() !== 'GBP') return []
+    const description = descriptionIndex >= 0 ? values[descriptionIndex] || '' : ''
+    return [{ id: 'sumup-' + (reference || date + '-' + index), kind: 'income' as const, date, amount, description: description || 'SumUp card payment', category: 'Card sales', counterparty: 'SumUp card reader', method: 'SumUp card reader' + (currency ? ' · ' + currency.toUpperCase() : ''), reference, notes: 'Imported from SumUp CSV' + (status ? ' · ' + status : ''), source: 'sumup' as const }]
+  })
+}
+function FinanceDashboard({ businessId, businessName }: { businessId: string; businessName: string }) {
+  const [transactions, setTransactions] = useState<FinanceTransaction[]>(() => { try { const saved = localStorage.getItem('bh-finance-v1-' + businessId); return saved ? JSON.parse(saved) : [] } catch { return [] } })
+  const [kind, setKind] = useState<'income' | 'expense'>('expense')
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+  const [amount, setAmount] = useState('')
+  const [description, setDescription] = useState('')
+  const [category, setCategory] = useState('')
+  const [counterparty, setCounterparty] = useState('')
+  const [method, setMethod] = useState('')
+  const [reference, setReference] = useState('')
+  const [notes, setNotes] = useState('')
+  const [filter, setFilter] = useState('all')
+  const [notice, setNotice] = useState('')
+  const [sumupConfigured, setSumupConfigured] = useState(false)
+  const [sumupConnected, setSumupConnected] = useState(false)
+  const [sumupLoading, setSumupLoading] = useState(false)
+  const csvInput = useRef<HTMLInputElement>(null)
+  useEffect(() => { try { localStorage.setItem('bh-finance-v1-' + businessId, JSON.stringify(transactions)) } catch { setNotice('Browser storage is full. Export your records and remove large items to continue.') } }, [transactions, businessId])
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('sumup') === 'connected') setNotice('SumUp is connected. Refresh transactions to load card payments.')
+    if (query.get('sumup') === 'failed') setNotice('SumUp could not connect. Check the OAuth setup and try again.')
+    fetch('/api/sumup?action=status').then(response => response.ok ? response.json() : null).then(status => {
+      if (!status) return
+      setSumupConfigured(Boolean(status.configured)); setSumupConnected(Boolean(status.connected))
+      if (status.connected) void refreshSumUp()
+    }).catch(() => {})
+  }, [])
+
+  const formatter = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' })
+  const monthKeys = Array.from({ length: 6 }, (_, index) => {
+    const value = new Date(); value.setDate(1); value.setMonth(value.getMonth() - 5 + index)
+    return { key: value.getFullYear() + '-' + String(value.getMonth() + 1).padStart(2, '0'), label: value.toLocaleDateString('en-GB', { month: 'short' }) }
+  })
+  const chartData = monthKeys.map(month => {
+    const rows = transactions.filter(item => item.date.slice(0, 7) === month.key)
+    return { ...month, income: rows.filter(item => item.kind === 'income').reduce((sum, item) => sum + item.amount, 0), expense: rows.filter(item => item.kind === 'expense').reduce((sum, item) => sum + item.amount, 0) }
+  })
+  const maxValue = Math.max(1, ...chartData.flatMap(item => [item.income, item.expense]))
+  const incomeTotal = transactions.filter(item => item.kind === 'income').reduce((sum, item) => sum + item.amount, 0)
+  const expenseTotal = transactions.filter(item => item.kind === 'expense').reduce((sum, item) => sum + item.amount, 0)
+  const net = incomeTotal - expenseTotal
+  const filteredTransactions = transactions.filter(item => filter === 'all' || item.kind === filter).slice().sort((a, b) => b.date.localeCompare(a.date))
+  async function refreshSumUp() {
+    setSumupLoading(true)
+    try {
+      const response = await fetch('/api/sumup?action=transactions')
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        if (response.status === 401) setSumupConnected(false)
+        setNotice(data.error || 'Could not retrieve SumUp transactions.')
+        return
+      }
+      const imported: FinanceTransaction[] = (data.transactions || []).flatMap((item: Record<string, unknown>) => {
+        const status = String(item.simple_status || item.status || '').toUpperCase()
+        if (!['SUCCESSFUL', 'PAID_OUT'].includes(status)) return []
+        const currency = String(item.currency || 'GBP').toUpperCase()
+        if (currency !== 'GBP') return []
+        const amountValue = Number(item.amount || 0) - Number(item.refunded_amount || 0)
+        if (!(amountValue > 0)) return []
+        const referenceValue = String(item.transaction_code || item.id || '')
+        const transactionDate = new Date(String(item.local_time || item.timestamp || item.date || ''))
+        const dateValue = Number.isNaN(transactionDate.getTime()) ? new Date().toISOString().slice(0, 10) : transactionDate.toISOString().slice(0, 10)
+        const device = item.device_info && typeof item.device_info === 'object' ? String((item.device_info as Record<string, unknown>).name || '') : ''
+        return [{ id: 'sumup-' + String(item.id || referenceValue), kind: 'income' as const, date: dateValue, amount: amountValue, description: String(item.product_summary || 'SumUp card payment'), category: 'Card sales', counterparty: device ? 'Reader ' + device : 'SumUp card reader', method: 'SumUp card reader', reference: referenceValue, notes: (status === 'PAID_OUT' ? 'Paid out' : 'Successful') + (Number(item.refunded_amount || 0) > 0 ? ' · partial refund recorded' : ''), source: 'sumup' as const }]
+      })
+      setTransactions(old => {
+        const oldByReference = new Set(old.filter(item => item.source === 'sumup').map(item => item.reference).filter(Boolean))
+        const fresh = imported.filter(item => !old.some(existing => existing.id === item.id) && (!item.reference || !oldByReference.has(item.reference)))
+        const importedIds = new Set(imported.map(item => item.id))
+        const importedRefs = new Set(imported.map(item => item.reference).filter(Boolean))
+        const retained = old.filter(item => item.source !== 'sumup' || (!importedIds.has(item.id) && (!item.reference || !importedRefs.has(item.reference))))
+        return [...fresh, ...retained]
+      })
+      setSumupConnected(true)
+      setNotice(imported.length + ' recent successful GBP card payments loaded from SumUp. Refresh again to check for updates.')
+    } catch { setNotice('Could not reach the SumUp connection. Please try again.') }
+    finally { setSumupLoading(false) }
+  }
+  function saveTransaction(event: React.FormEvent) {
+    event.preventDefault()
+    const parsed = Number(amount)
+    if (!date || !description.trim() || !category || !Number.isFinite(parsed) || parsed <= 0) { setNotice('Add a date, description, category and valid amount before saving.'); return }
+    setTransactions(old => [{ id: crypto.randomUUID(), kind, date, amount: parsed, description: description.trim(), category, counterparty: counterparty.trim(), method: method || (kind === 'income' ? 'Cash / other' : 'Bank / other'), reference: reference.trim(), notes: notes.trim(), source: 'manual' }, ...old])
+    setAmount(''); setDescription(''); setCategory(''); setCounterparty(''); setMethod(''); setReference(''); setNotes('')
+    setNotice('Transaction saved in this browser.')
+  }
+  function importCsv(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]; if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const imported = parseFinanceCsv(String(reader.result || ''))
+      if (!imported.length) { setNotice('No transactions found. Use a SumUp transaction CSV with a date and amount column.'); return }
+      setTransactions(old => {
+        const ids = new Set(old.map(item => item.id))
+        const fresh = imported.filter(item => !ids.has(item.id))
+        setNotice(fresh.length ? fresh.length + ' SumUp payments imported. Check the records below.' : 'Those SumUp transactions are already imported.')
+        return [...fresh, ...old]
+      })
+    }
+    reader.readAsText(file); event.target.value = ''
+  }
+  function exportTransactions() {
+    const headers = ['Date','Type','Description','Category','Amount GBP','Supplier / customer','Payment method','Reference','Notes','Source']
+    const csvCell = (value: string | number) => '"' + String(value).replaceAll('"', '""') + '"'
+    const csv = [headers.map(csvCell).join(','), ...transactions.map(item => [item.date,item.kind,item.description,item.category,item.amount.toFixed(2),item.counterparty,item.method,item.reference,item.notes,item.source].map(csvCell).join(','))].join('\r\n')
+    const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); link.download = 'income-expenses.csv'; link.click(); URL.revokeObjectURL(link.href)
+  }
+  const categories = kind === 'expense' ? ['Food stock and ingredients','Packaging and disposables','Fuel and travel','Pitch / market / venue fees','Equipment and smallwares','Repairs and maintenance','Utilities','Insurance','Bank and card fees','Staff and payroll','Marketing','Other'] : ['Card sales','Cash sales','Bank transfer','Catering / event income','Refund received','Other income']
+  return <div className="finance-page">
+    <div className="page-heading-row safety-folder-page-heading"><div><div className="eyebrow">{businessName.toUpperCase()} · FINANCE</div><h1>Expenses &amp; Income</h1><p className="page-subtitle">Track money coming in and going out, review the trend, and keep a clear transaction history.</p></div><div className="page-heading-actions"><button className="button secondary" type="button" onClick={exportTransactions}><ArrowDownToLine size={16}/>Export CSV</button></div></div>
+    <section className="finance-connection panel"><div><span className="finance-status-dot"/><div><b>SumUp card reader</b><small>{sumupConnected ? 'Connected · transaction history is available' : sumupConfigured ? 'Not connected · authorise SumUp to load card-reader sales' : 'Not configured · secure SumUp credentials are needed on the server'}</small></div></div><div className="finance-connection-actions">{sumupConfigured && <><button className="button primary" type="button" onClick={() => sumupConnected ? void refreshSumUp() : window.location.assign('/api/sumup?action=connect')} disabled={sumupLoading}>{sumupLoading ? 'Loading…' : sumupConnected ? 'Refresh SumUp' : 'Connect SumUp'}</button>{sumupConnected && <button className="text-link" type="button" onClick={() => { void fetch('/api/sumup?action=disconnect').then(() => { setSumupConnected(false); setNotice('SumUp disconnected from this browser.') }) }}>Disconnect</button>}</>}<button className="button secondary" type="button" onClick={() => csvInput.current?.click()}><ArrowUpFromLine size={16}/>Import SumUp CSV</button><input ref={csvInput} className="finance-file-input" type="file" accept=".csv,text/csv" onChange={importCsv}/><button className="text-link" type="button" onClick={() => setNotice(sumupConfigured ? 'SumUp uses secure OAuth. The app requests read-only transaction history and profile access, and keeps tokens in an encrypted, HttpOnly server cookie.' : 'To enable a live connection, register a SumUp OAuth app and configure SUMUP_CLIENT_ID, SUMUP_CLIENT_SECRET, SUMUP_REDIRECT_URI and SUMUP_SESSION_SECRET as Vercel environment variables. Never put credentials in this browser or public code.')}>Connection details</button></div></section>
+    {notice && <div className="finance-notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Dismiss message"><X size={16}/></button></div>}
+    <section className="finance-summary-grid">
+      <article className="finance-stat"><span>Total income</span><strong className="finance-income">{formatter.format(incomeTotal)}</strong><small>All recorded income</small></article>
+      <article className="finance-stat"><span>Total outgoings</span><strong className="finance-expense">{formatter.format(expenseTotal)}</strong><small>All recorded expenses</small></article>
+      <article className="finance-stat"><span>Net balance</span><strong>{formatter.format(net)}</strong><small>Income minus outgoings</small></article>
+      <article className="finance-stat"><span>Transactions</span><strong>{transactions.length}</strong><small>{transactions.filter(item => item.source === 'sumup').length} imported from SumUp</small></article>
+    </section>
+    <section className="panel finance-chart-panel"><div className="finance-section-head"><div><h2>Income and outgoings</h2><p>Monthly totals for the last six months. Values use GBP and recorded transactions only.</p></div><div className="finance-legend"><span><i className="income-dot"/>Income</span><span><i className="expense-dot"/>Outgoings</span></div></div>
+      <div className="finance-chart">{chartData.map(item => <div className="finance-chart-month" key={item.key}><div className="finance-bars"><div className="finance-bar income-bar" style={{ height: Math.max(item.income ? 8 : 0, item.income / maxValue * 150) }} title={'Income: ' + formatter.format(item.income)} /><div className="finance-bar expense-bar" style={{ height: Math.max(item.expense ? 8 : 0, item.expense / maxValue * 150) }} title={'Outgoings: ' + formatter.format(item.expense)} /></div><b>{item.label}</b><small>{formatter.format(item.income)} / {formatter.format(item.expense)}</small></div>)}</div>
+      <div className="finance-chart-caption"><span>Income</span><span>Outgoings</span></div>
+    </section>
+    <section className="panel finance-ledger"><div className="finance-section-head"><div><h2>Transaction details</h2><p>Income and expenses recorded for {businessName}.</p></div><label className="finance-filter-label">Show<select value={filter} onChange={event => setFilter(event.target.value)}><option value="all">All transactions</option><option value="income">Income only</option><option value="expense">Outgoings only</option></select></label></div>
+      {filteredTransactions.length ? <div className="finance-table-wrap"><table className="finance-table"><thead><tr><th>Date</th><th>Details</th><th>Category</th><th>Method</th><th>Reference</th><th>Amount</th></tr></thead><tbody>{filteredTransactions.map(item => <tr key={item.id}><td>{new Date(item.date + 'T12:00:00').toLocaleDateString('en-GB')}</td><td><b>{item.description}</b>{item.counterparty && <small>{item.counterparty}</small>}{item.notes && <small>{item.notes}</small>}</td><td>{item.category}</td><td>{item.method}</td><td>{item.reference || '—'}</td><td className={item.kind === 'income' ? 'finance-income' : 'finance-expense'}>{item.kind === 'income' ? '+' : '−'}{formatter.format(item.amount)}</td></tr>)}</tbody></table></div> : <div className="finance-empty"><b>No transactions recorded yet</b><span>Add an income or expense below, or import a SumUp transaction CSV.</span></div>}
+    </section>
+    <section className="panel finance-entry-panel"><div className="finance-section-head"><div><h2>Add a transaction</h2><p>Use the dropdowns and fill in the details. Entries are saved in this browser for this business.</p></div></div>
+      <form className="finance-entry-form" onSubmit={saveTransaction}>
+        <label className="field-label">Transaction type<select value={kind} onChange={event => { setKind(event.target.value as 'income' | 'expense'); setCategory(''); setMethod('') }}><option value="expense">Outgoing / expense</option><option value="income">Incoming / income</option></select></label>
+        <label className="field-label">Date<input required type="date" value={date} onChange={event => setDate(event.target.value)}/></label>
+        <label className="field-label">Amount (£)<input required min="0.01" step="0.01" type="number" inputMode="decimal" value={amount} onChange={event => setAmount(event.target.value)} placeholder="0.00"/></label>
+        <label className="field-label">Category<select required value={category} onChange={event => setCategory(event.target.value)}><option value="">Choose a category</option>{categories.map(value => <option key={value}>{value}</option>)}</select></label>
+        <label className="field-label">Description<input required value={description} onChange={event => setDescription(event.target.value)} placeholder={kind === 'expense' ? 'What was paid for?' : 'Where did the income come from?'}/></label>
+        <label className="field-label">{kind === 'expense' ? 'Supplier / payee' : 'Customer / source'}<input value={counterparty} onChange={event => setCounterparty(event.target.value)} placeholder="Optional name"/></label>
+        <label className="field-label">Payment method<select value={method} onChange={event => setMethod(event.target.value)}><option value="">Choose payment method</option>{(kind === 'income' ? ['SumUp card reader','Cash','Bank transfer','Other'] : ['Business debit card','Cash','Bank transfer','Direct debit','Other']).map(value => <option key={value}>{value}</option>)}</select></label>
+        <label className="field-label">Reference<input value={reference} onChange={event => setReference(event.target.value)} placeholder="Receipt, invoice or transaction ID"/></label>
+        <label className="field-label finance-notes-field">Notes<textarea value={notes} onChange={event => setNotes(event.target.value)} placeholder="Optional notes; do not include full card details"/></label>
+        <div className="finance-form-actions"><span>Records are stored locally in this browser and are not synced to SumUp or other devices.</span><button className="button primary" type="submit"><Plus size={16}/>Save transaction</button></div>
+      </form>
+    </section>
   </div>
 }
 
