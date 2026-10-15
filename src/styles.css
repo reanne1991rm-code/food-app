@@ -887,6 +887,13 @@ section.editor-panel .button.secondary {
 .supplier-delivery-action { grid-column:1 / -1; }
 .supplier-delivery-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
 .supplier-delivery-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
+.pest-water-record-form { display:grid; gap:16px; }
+.pest-water-record-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.pest-water-record-grid .field-label { min-width:0; margin:0; }
+.pest-water-record-grid textarea { min-height:78px; }
+.pest-water-wide { grid-column:1 / -1; }
+.pest-water-record-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
+.pest-water-record-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
 .storage-rotation-form .overview-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .storage-rotation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
 .storage-rotation-grid .field-label { min-width:0; margin:0; }
@@ -939,7 +946,7 @@ section.editor-panel .button.secondary {
 .allergen-management-form .overview-preview summary { cursor:pointer; color:#ffd36a; font-weight:650; }
 .allergen-management-form .overview-preview pre { max-height:320px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#fff; font:13px/1.6 Arial,sans-serif; }
 @media (max-width: 760px) {
-  .temperature-check-grid, .temperature-record-form .overview-form-grid, .cleaning-record-form .overview-form-grid, .cleaning-record-grid, .supplier-delivery-form .overview-form-grid, .supplier-delivery-grid, .storage-rotation-form .overview-form-grid, .storage-rotation-grid, .food-process-meta, .hygiene-policy-meta, .management-pack-section .overview-form-grid, .allergen-matrix-meta, .allergen-item-fields, .allergen-verification-fields { grid-template-columns: minmax(0, 1fr); }
+  .temperature-check-grid, .temperature-record-form .overview-form-grid, .cleaning-record-form .overview-form-grid, .cleaning-record-grid, .supplier-delivery-form .overview-form-grid, .supplier-delivery-grid, .pest-water-record-grid, .storage-rotation-form .overview-form-grid, .storage-rotation-grid, .food-process-meta, .hygiene-policy-meta, .management-pack-section .overview-form-grid, .allergen-matrix-meta, .allergen-item-fields, .allergen-verification-fields { grid-template-columns: minmax(0, 1fr); }
   .allergen-checkboxes { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .cleaning-issue-field { grid-column:auto; }
   .supplier-delivery-action { grid-column:auto; }
