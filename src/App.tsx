@@ -975,6 +975,7 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
           : isDailyTemperatureDocument(doc) ? temperatureRecordMarkdown(temperatureForm)
           : isTemperatureMonitoringLog(doc) ? temperatureRecordMarkdown(editing?.id === doc.id ? temperatureMonitoringForm : temperatureMonitoringFormFromDocument(doc), 'Temperature Monitoring Log')
           : isDailyOpeningClosingDocument(doc) ? openingClosingMarkdown(openingClosingForm)
+          : isSanitiserLogDocument(doc) ? sanitiserLogMarkdown(editing?.id === doc.id ? sanitiserLogForm : sanitiserLogFromDocument(doc))
           : isCleaningRecordDocument(doc) ? cleaningRecordMarkdown(cleaningRecordFromDocument(doc))
           : isSupplierDeliveryDocument(doc) ? supplierDeliveryMarkdown(editing?.id === doc.id ? supplierDeliveryForm : supplierDeliveryFromDocument(doc))
           : isStorageRotationDocument(doc) ? storageRotationMarkdown(editing?.id === doc.id ? storageRotationForm : storageRotationFromDocument(doc))
