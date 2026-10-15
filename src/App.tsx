@@ -1134,20 +1134,29 @@ ${policyForm.recordNotes || "Record checks, problems and corrective actions; ass
   }
   function navigate(next: string) { setPage(next); setEditing(null); setMobileMenu(false); setSearch('') }
   function closeEditor() {
-    const category = editing?.category || ''
+    const doc = editing
+    const category = doc?.category || ''
+    const title = doc?.title.trim().toLowerCase() || ''
     let destination = 'documents'
-    if (category.startsWith(savedFormsPrefix)) {
-      const folder = category.slice(savedFormsPrefix.length)
-      setSelectedSavedFolder(savedFormFolders.includes(folder) ? folder : '')
+    if (doc && (category.startsWith(savedFormsPrefix) || category.toLowerCase().includes('saved forms'))) {
+      const folderFromCategory = category.startsWith(savedFormsPrefix) ? category.slice(savedFormsPrefix.length) : ''
+      const inferredFolder = folderFromCategory || savedFormFolderFor(doc)
+      setSelectedSavedFolder(savedFormFolders.includes(inferredFolder) ? inferredFolder : '')
       destination = 'extras-folder'
     } else {
       setSelectedSavedFolder('')
-      if (category === 'Folder 1 — Food Safety Management') destination = 'safety-folder'
-      else if (category === foodHandlingCategory) destination = 'handling-folder'
-      else if (category === cleaningCategory) destination = 'cleaning-folder'
-      else if (category === transportCategory) destination = 'transport-folder'
-      else if (category === businessPaperworkCategory) destination = 'business-paperwork-folder'
-      else if (category === extrasCategory) destination = 'extras-folder'
+      if (category === 'Folder 1 — Food Safety Management' || category === 'Food safety' || ['fs1', 'fs2-v2', 'fs8', 'fs9', 'fs10', 'fs11', 'fs12', 'fs13', 'fs14'].includes(doc?.id || '') || /food safety|hygiene policy|training records|document review|corrective action|incident records/.test(title)) destination = 'safety-folder'
+      else if (category === foodHandlingCategory || ['fs5', 'fs6', 'fs7'].includes(doc?.id || '') || /allergen|supplier|delivery|storage|stock rotation/.test(title)) destination = 'handling-folder'
+      else if (category === cleaningCategory || ['fs4', 'fs15', 'fs16'].includes(doc?.id || '') || /cleaning|sanitiser|sanitizer|equipment check|maintenance record/.test(title)) destination = 'cleaning-folder'
+      else if (category === transportCategory || ['d3', 'fs3', 'fs17', 'fs18'].includes(doc?.id || '') || /transport|temperature monitoring|temperature record|preparation record/.test(title)) destination = 'transport-folder'
+      else if (category === businessPaperworkCategory || ['fs19', 'fs20', 'fs21', 'fs22'].includes(doc?.id || '') || /business registration|permission|licen[cs]e|insurance|correspondence/.test(title)) destination = 'business-paperwork-folder'
+      else if (category === extrasCategory || /business details|key contacts|useful resources/.test(title)) destination = 'extras-folder'
+      else if (category.toLowerCase().includes('food safety')) destination = 'safety-folder'
+      else if (category.toLowerCase().includes('storage') || category.toLowerCase().includes('allergen') || category.toLowerCase().includes('supplier')) destination = 'handling-folder'
+      else if (category.toLowerCase().includes('clean')) destination = 'cleaning-folder'
+      else if (category.toLowerCase().includes('transport') || category.toLowerCase().includes('temperature')) destination = 'transport-folder'
+      else if (category.toLowerCase().includes('business') || category.toLowerCase().includes('council')) destination = 'business-paperwork-folder'
+      else if (category.toLowerCase().includes('extra')) destination = 'extras-folder'
     }
     setPage(destination)
     setEditing(null)
