@@ -980,7 +980,20 @@ export default function App() {
     setEditing(doc); setEditorTitle(doc.title); setEditorContent(doc.content);
     if (doc.id === 'fs1' || /food safety management overview/i.test(doc.title.trim())) setOverviewForm(emptyOverviewForm);
     if (isPolicyDocument(doc)) setPolicyForm(policyFormFromDocument(doc));
-    if (isDailyTemperatureDocument(doc)) setTemperatureForm(temperatureRecordFromDocument(doc));
+    if (isDailyTemperatureDocument(doc)) {
+      const savedTemperatureForm = temperatureRecordFromDocument(doc);
+      setTemperatureForm(doc.id === 'fs3' && !doc.temperatureData ? {
+        ...savedTemperatureForm,
+        checks: [
+          { time: '', item: 'Trailer fridge', actual: '', limit: 'Use the business limit set in the food safety procedure (target 5°C or below)', result: '', action: '', initials: '' },
+          { time: '', item: 'Trailer freezer', actual: '', limit: 'Business target: -18°C or colder', result: '', action: '', initials: '' },
+          { time: '', item: 'Home fridge (if storing business food)', actual: '', limit: 'Use the business limit set in the food safety procedure (target 5°C or below)', result: '', action: '', initials: '' },
+          { time: '', item: 'Home freezer (if storing business food)', actual: '', limit: 'Business target: -18°C or colder', result: '', action: '', initials: '' },
+          { time: '', item: 'Cooking / hot holding check (when applicable)', actual: '', limit: 'Follow the verified safe method for the specific food and process', result: '', action: '', initials: '' }
+        ],
+        notes: 'Template only: record actual readings and times. Remove or edit rows that do not apply to the actual setup. Confirm safe limits and check frequency against current official guidance and the food safety procedure. Never enter guessed readings. Record corrective action for any result outside the required limit.'
+      } : savedTemperatureForm);
+    }
     if (isTemperatureMonitoringLog(doc)) setTemperatureMonitoringForm(temperatureMonitoringFormFromDocument(doc));
     if (isDailyOpeningClosingDocument(doc)) setOpeningClosingForm(openingClosingFormFromDocument(doc));
     if (isCleaningRecordDocument(doc)) setCleaningForm(cleaningRecordFromDocument(doc));
