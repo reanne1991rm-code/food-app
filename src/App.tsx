@@ -1039,7 +1039,13 @@ export default function App() {
       notes: 'DRAFT — verify these methods against the final menu, actual equipment and current Food Standards Agency guidance before use. Confirm home preparation and transport arrangements with Nottingham City Council before relying on them. Keep raw and ready-to-eat foods separate, maintain accurate allergen information, and record actual checks. Never guess temperatures or backfill records. Rice and chicken require particular care; cook rice for immediate service unless a specific safe cooling/storage method has been established.'
     } : foodProcessFromDocument(doc));
     if (isFoodPreparationRecordDocument(doc)) setPreparationRecordsForm(preparationRecordsFromDocument(doc));
-    if (isHygienePolicyDocument(doc)) setHygienePolicyForm(hygienePolicyFromDocument(doc));
+    if (isHygienePolicyDocument(doc)) setHygienePolicyForm(doc.id === 'fs9' && !doc.hygienePolicyData ? {
+      ...emptyHygienePolicyForm,
+      business: 'The Small Kitchen',
+      responsible: 'Owner / food safety lead — Reanne R Marshall-Lewis',
+      reviewDate: '',
+      notes: 'DRAFT — review before use and brief every person who handles food. This policy applies to work at the trailer and any approved home-preparation area. Keep illness records confidential and only record information needed to manage food safety. Confirm current official guidance and seek local-authority or medical advice when a case needs individual assessment.'
+    } : hygienePolicyFromDocument(doc));
     if (isManagementPackDocument(doc)) setManagementPackForm(managementPackFormFromDocument(doc));
     if (isAllergenMatrixDocument(doc)) setAllergenMatrixForm(allergenMatrixFromDocument(doc));
     if (isAllergenManagementDocument(doc)) setAllergenManagementForm(allergenManagementFromDocument(doc));
