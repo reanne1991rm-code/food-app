@@ -209,7 +209,7 @@ type OverviewForm = {
   hotHolding: string; trainingStatus: string; reviewDate: string; notes: string;
 }
 const emptyOverviewForm: OverviewForm = {
-  businessName: 'The Small Kitchen', responsiblePerson: 'Reanne R Marshall-Lewis — owner / food business operator', businessAddress: '21 Harvest Close', contactPhone: '07832459080', contactEmail: 'reanne1991.rm@gmail.com',
+  businessName: 'The Small Kitchen', responsiblePerson: 'Owner / food business operator — Reanne R Marshall-Lewis', businessAddress: 'Enter business correspondence address privately in the form', contactPhone: 'Enter contact telephone privately in the form', contactEmail: 'Enter business email privately in the form',
   tradingLocation: 'NG5, Nottingham — exact pitch, landowner consent and council permissions to be confirmed before trading',
   preparationLocation: 'Home and trailer. Planned home preparation, storage and transport must be discussed with Nottingham City Council and confirmed as suitable before use. Exact home preparation tasks and separation from household food to be documented.',
   foodTypes: 'Planned menu: deep-fried chicken strips, chips, rice dishes, chicken curry and other sauces, breakfast items, sandwiches and wraps. Final recipes, ingredients, supplier specifications and allergen information must be verified before sale.',
