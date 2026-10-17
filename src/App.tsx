@@ -1008,7 +1008,36 @@ export default function App() {
     if (isUsefulResourcesDocument(doc)) setUsefulResourcesForm(usefulResourcesFromDocument(doc));
     if (isSupplierDeliveryDocument(doc)) setSupplierDeliveryForm(supplierDeliveryFromDocument(doc));
     if (isStorageRotationDocument(doc)) setStorageRotationForm(storageRotationFromDocument(doc));
-    if (isFoodProcessDocument(doc)) setFoodProcessForm(foodProcessFromDocument(doc));
+    if (isFoodProcessDocument(doc)) setFoodProcessForm(doc.id === 'fs8' && !doc.foodProcessData ? {
+      ...emptyFoodProcessStepForm,
+      business: 'The Small Kitchen',
+      responsible: 'Owner / food business operator — Reanne R Marshall-Lewis',
+      preparation: {
+        method: 'Before starting, check the work area, handwashing facilities, equipment and probe thermometer are clean and ready. Wash hands. Check deliveries, packaging, use-by dates and supplier instructions. Keep raw poultry separate from ready-to-eat food, cooked food and allergens; use separate labelled containers and suitable separate utensils/boards, or clean and disinfect between tasks. Thaw frozen food safely in refrigeration or by the manufacturer-approved method; never thaw at room temperature. Prepare only what can be safely controlled. Keep food covered, labelled and at the required temperature. For home preparation, keep business food separate from household food and document the agreed preparation, storage and transport arrangements with Nottingham City Council before using them.',
+        limit: 'Accept only food from suitable suppliers that is in good condition and within date. Follow the food-specific storage and thawing instructions. Keep chilled high-risk food at the business limit (target 5°C or below) and separate raw from ready-to-eat food. Verify the actual process and limits for each menu item before trading.',
+        monitoring: 'Check and record fridge temperatures at the frequency in the daily procedure. Check deliveries, dates, packaging and condition; record rejected deliveries and any issue. Check separation, labelling and cleaning during preparation. Record any required food temperature checks and corrective actions.',
+        correctiveAction: 'Do not use food with uncertain safety, damaged packaging, unsuitable temperatures or expired use-by dates. Separate and assess affected food; reject or safely discard it if safety cannot be established. Stop preparation, clean and disinfect contaminated areas, replace contaminated utensils, and record the problem and action.'
+      },
+      cooking: {
+        method: 'Cook each food using a documented method matched to the recipe, portion size and equipment. For chicken and other high-risk foods, check the centre of the thickest part with a clean, disinfected probe thermometer without touching bone or the pan. Stir or check more than one place for mixed dishes where appropriate. Follow manufacturer instructions for frozen products and do not assume the outside being browned means the centre is cooked. Record the actual result.',
+        limit: 'General benchmark: 70°C for 2 minutes at the centre, or an equivalent time/temperature combination supported by current Food Standards Agency guidance and the documented safe method. Apply a validated product-specific method where appropriate.',
+        monitoring: 'Record the food, batch, time, actual core temperature, required limit, result, initials and any corrective action. Clean and disinfect the probe before and after use.',
+        correctiveAction: 'If the required cooking limit is not reached, continue cooking and recheck with a clean probe. If safe cooking cannot be verified, do not serve the food; isolate and discard it if safety cannot be assured. Record the failure and action.'
+      },
+      cooling: {
+        method: 'Only cool food for later use when the business has a documented safe method for that food. Divide food into small, shallow portions in clean suitable containers to speed cooling. Protect from contamination and cool rapidly; do not leave large pots of rice, curry or other cooked food at room temperature. Transfer to refrigeration promptly using a method that does not warm other stored foods; verify the cooling process before adopting it. Label with food name, batch and date/time. For rice, the safest simple approach is to cook for immediate service; if cooling is planned, establish and follow a specific validated rice procedure and local-authority advice.',
+        limit: 'Cool as quickly as possible using the verified food-specific procedure and current official guidance. Set and record a measurable cooling target before using this method commercially; do not guess or assume a cooling time without verification.',
+        monitoring: 'Record food and batch, start time, cooling checks and times, actual temperatures where specified, refrigeration time, label details and initials. Verify that the method works for the actual portion sizes and fridge capacity.',
+        correctiveAction: 'If cooling is delayed or the documented limit is missed, isolate the food and assess it under the written corrective-action procedure. Discard food if safety cannot be demonstrated. Do not place large hot containers into a crowded fridge if this prevents safe cooling or raises the temperature of other food.'
+      },
+      reheating: {
+        method: 'Reheat only food that was cooled, stored, labelled and transported under the documented safe procedure. Reheat rapidly until steaming hot throughout, stirring sauces and mixed dishes so there are no cold spots. Check the centre with a clean, disinfected probe where required. Reheat only the amount needed for service and do not use the food warmer to reheat food unless the equipment and process have been specifically verified for that purpose.',
+        limit: 'Reheat until steaming hot throughout and meet the documented food-specific time/temperature method. Reheat only once. Do not reheat food that has been stored or cooled unsafely or whose history is unknown.',
+        monitoring: 'Record the food/batch, reheating time, actual temperature where required, result, initials and any corrective action. Check that food is steaming hot throughout before service.',
+        correctiveAction: 'Continue reheating and recheck if the safe limit has not been reached and the food remains safe to use. If safe handling or storage cannot be established, do not serve; discard it and record the action.'
+      },
+      notes: 'DRAFT — verify these methods against the final menu, actual equipment and current Food Standards Agency guidance before use. Confirm home preparation and transport arrangements with Nottingham City Council before relying on them. Keep raw and ready-to-eat foods separate, maintain accurate allergen information, and record actual checks. Never guess temperatures or backfill records. Rice and chicken require particular care; cook rice for immediate service unless a specific safe cooling/storage method has been established.'
+    } : foodProcessFromDocument(doc));
     if (isFoodPreparationRecordDocument(doc)) setPreparationRecordsForm(preparationRecordsFromDocument(doc));
     if (isHygienePolicyDocument(doc)) setHygienePolicyForm(hygienePolicyFromDocument(doc));
     if (isManagementPackDocument(doc)) setManagementPackForm(managementPackFormFromDocument(doc));
