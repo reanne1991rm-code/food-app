@@ -1071,7 +1071,18 @@ export default function App() {
         notes: 'DRAFT TEMPLATE: these are prompts, not completed checks. Enter actual dates, findings and status after inspection. Do not claim water is potable or tanks are cleaned unless verified. Confirm the actual tank setup, cleaning method and authorised waste disposal arrangements before trading. Stop using any water or equipment suspected to be contaminated until made safe.'
       } : saved);
     }
-    if (isTrainingRecordsDocument(doc)) setTrainingRecordsForm(trainingRecordsFromDocument(doc));
+    if (isTrainingRecordsDocument(doc)) {
+      const savedTraining = trainingRecordsFromDocument(doc);
+      setTrainingRecordsForm(doc.id === 'fs13' && !doc.trainingRecordsData ? {
+        ...savedTraining,
+        records: [
+          { ...blankTrainingRecord(), staffMember: 'Reanne R Marshall-Lewis', role: 'Owner / food business operator', training: 'Level 2 Award in Food Safety – Catering', status: 'Completed — certificate reported by business owner; verify certificate copy', dateCompleted: '2026-10-11', trainer: 'The Safer Food Group Training', evidence: 'Certificate reference FHCN — add certificate file / storage location', refresherDue: 'Set review / refresher date based on training needs and current guidance', support: 'Keep certificate available and ensure knowledge matches the actual menu, equipment and procedures', acknowledgement: 'Owner record — confirm details against certificate' },
+          { ...blankTrainingRecord(), staffMember: 'Reanne R Marshall-Lewis', role: 'Owner / food business operator', training: 'Food Allergy and Intolerance Training', status: 'Completed — certificate reported by business owner; verify completion evidence', dateCompleted: '2026-10-11', trainer: 'Food Standards Agency online training', evidence: 'Save completion evidence in the business records', refresherDue: 'Review when menu, ingredients, suppliers or allergen procedures change', support: 'Maintain current ingredient and allergen information and cross-contamination controls', acknowledgement: 'Owner record — confirm details against completion evidence' },
+          { ...blankTrainingRecord(), staffMember: 'Staff member to be added', role: 'To be assigned before work starts', training: 'Induction: handwashing, personal hygiene, illness reporting, cross-contamination, cleaning, temperature checks, allergens, safe equipment use and emergency procedures', status: 'Not recorded', trainer: 'Owner / competent trainer to be recorded', evidence: 'Record evidence or signed induction checklist', refresherDue: 'Set according to role, supervision and changes to procedures', support: 'Complete and document before the person undertakes relevant tasks', acknowledgement: 'Obtain staff acknowledgement after training' }
+        ],
+        notes: 'DRAFT TRAINING REGISTER: the first two entries are based on certificates/completions previously reported by the business owner; check the original evidence and correct any details before relying on this register. Do not mark any additional staff training complete until delivered and recorded. Training must be suitable for each person’s tasks and supplemented by practical instruction, supervision and current business procedures. Review training when the menu, equipment, allergens, layout or working practices change.'
+      } : savedTraining);
+    }
     if (isDocumentReviewLog(doc)) setDocumentReviewForm(documentReviewFromDocument(doc));
     setPage('documents');
   }
