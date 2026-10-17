@@ -1058,7 +1058,19 @@ export default function App() {
     if (isManagementPackDocument(doc)) setManagementPackForm(managementPackFormFromDocument(doc));
     if (isAllergenMatrixDocument(doc)) setAllergenMatrixForm(allergenMatrixFromDocument(doc));
     if (isAllergenManagementDocument(doc)) setAllergenManagementForm(allergenManagementFromDocument(doc));
-    if (isPestWasteWaterDocument(doc)) setPestWasteWaterForm(pestWasteWaterFromDocument(doc));
+    if (isPestWasteWaterDocument(doc)) {
+      const saved = pestWasteWaterFromDocument(doc);
+      setPestWasteWaterForm(doc.id === 'fs10' && !doc.pestWasteWaterData ? {
+        ...saved,
+        records: [
+          { ...blankPestWasteWaterRecord(), recordType: 'Pest inspection', location: 'Trailer interior, doors, vents, storage and surrounding pitch', status: 'Not checked', responsible: 'Owner / food business operator', action: 'Inspect for droppings, gnaw marks, insects, damaged packaging and entry points. Record findings and corrective action.' },
+          { ...blankPestWasteWaterRecord(), recordType: 'Waste handling', location: 'Trailer bins, waste storage and disposal arrangements', status: 'Not checked', responsible: 'Owner / food business operator', action: 'Check bins are clean, closed and not overflowing. Record waste removal and the disposal route.' },
+          { ...blankPestWasteWaterRecord(), recordType: 'Fresh-water supply', location: 'Potable-water source, fresh-water tank, hoses and connections', status: 'Not checked', responsible: 'Owner / food business operator', waterSource: 'Enter actual supplier/source and refill point', potable: 'Not checked', tankService: 'Record actual tank cleaning, disinfection and refill details', separationCheck: 'Not checked', action: 'Use potable water only. Check the tank, lids, hoses and connections are clean and protected.' },
+          { ...blankPestWasteWaterRecord(), recordType: 'Wastewater system', location: 'Wastewater tank, pipework, connections and disposal', status: 'Not checked', responsible: 'Owner / food business operator', separationCheck: 'Not checked', action: 'Check for leaks, capacity and separation from fresh water. Record the actual wastewater disposal route.' }
+        ],
+        notes: 'DRAFT TEMPLATE: these are prompts, not completed checks. Enter actual dates, findings and status after inspection. Do not claim water is potable or tanks are cleaned unless verified. Confirm the actual tank setup, cleaning method and authorised waste disposal arrangements before trading. Stop using any water or equipment suspected to be contaminated until made safe.'
+      } : saved);
+    }
     if (isTrainingRecordsDocument(doc)) setTrainingRecordsForm(trainingRecordsFromDocument(doc));
     if (isDocumentReviewLog(doc)) setDocumentReviewForm(documentReviewFromDocument(doc));
     setPage('documents');
