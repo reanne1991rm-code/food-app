@@ -323,14 +323,14 @@ const closingItems = ['Food safely stored or discarded', 'Cleaning completed and
 const checklistItems = (labels: string[]): OpeningClosingItem[] => labels.map(label => ({ label, status: 'Not checked', action: '' }))
 const emptyOpeningClosingForm: OpeningClosingForm = { date: '', responsible: '', opening: checklistItems(openingItems), closing: checklistItems(closingItems), issue: '', action: '', followUp: '' }
 const emptyPolicyForm: PolicyForm = {
-  foodSafetyLead: '', foodSafetyLeadName: '', deputy: '', effectiveDate: '', reviewDate: '',
-  businessName: 'The Small Kitchen', businessAddress: '', tradingLocation: '', staffRoles: 'Owner / food business operator',
+  foodSafetyLead: 'Business owner', foodSafetyLeadName: 'Reanne R Marshall-Lewis', deputy: 'No deputy — owner covers', effectiveDate: '', reviewDate: '',
+  businessName: 'The Small Kitchen', businessAddress: 'Enter business correspondence address privately in the form', tradingLocation: 'NG5, Nottingham — exact pitch and required permissions to be confirmed before trading', staffRoles: 'Owner / food business operator',
   illnessReporting: 'Staff must report vomiting, diarrhoea, infected wounds or other symptoms before handling food',
-  training: 'Training and supervision appropriate to duties; retain evidence of training',
+  training: 'Completed: Level 2 Award in Food Safety — Catering, The Safer Food Group Training, awarded 11 October 2026 (Pass); and Food Allergy and Intolerance Training, Food Standards Agency online assessment, completed 11 October 2026. Keep both certificates with business records. Confirm any additional training needs for actual duties. Training does not itself constitute FSA approval or confirm business compliance.',
   allergenControl: 'Check current supplier labels and recipes; provide accurate information and prevent cross-contact',
   recordKeeping: 'Complete records at the time checks are made; record actual results and corrective actions',
   reviewFrequency: 'At least annually and whenever the menu, process, equipment, premises or staff change',
-  signedBy: '', notes: '', policyNotes: '', shiftResponsibilities: '', illnessNotes: '', recordNotes: '',
+  signedBy: '', notes: 'DRAFT: Review this policy against the actual working arrangements before signing. Confirm any council advice, final trading pitch, home-preparation arrangements and whether additional staff will be involved.', policyNotes: 'The Small Kitchen plans to operate a mobile hot-food trailer serving fried chicken strips, chips, rice dishes, curries and sauces, breakfast items, sandwiches and wraps. Confirm final recipes, equipment and safe methods before trading. Planned home preparation and transport must be discussed with Nottingham City Council and documented before use.', shiftResponsibilities: 'Owner currently responsible for opening checks, food preparation and service checks, temperature and cleaning records, allergen information, closing checks and corrective actions. Update this section if other staff are introduced.', illnessNotes: '', recordNotes: '',
   ownerResponsibilities: 'Maintain suitable procedures, equipment and training; review records and act on problems.',
   handlerResponsibilities: 'Follow procedures, maintain hygiene, complete checks honestly, and report illness or unsafe conditions promptly.',
   cleaningResponsibilities: 'Clean first, then disinfect food-contact surfaces with a suitable product following its label and contact time; record completion and issues.',
