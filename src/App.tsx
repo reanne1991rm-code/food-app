@@ -209,12 +209,19 @@ type OverviewForm = {
   hotHolding: string; trainingStatus: string; reviewDate: string; notes: string;
 }
 const emptyOverviewForm: OverviewForm = {
-  businessName: 'The Small Kitchen', responsiblePerson: '', businessAddress: '', contactPhone: '', contactEmail: '',
-  tradingLocation: '', preparationLocation: 'Trailer only', foodTypes: 'Hot food prepared and served',
-  serviceStyle: 'Made to order', staffCount: 'Owner only', waterSupply: 'Fresh-water tank',
-  wastewater: 'Separate wastewater tank', refrigeration: 'Fridge and/or freezer used as required',
-  hotHolding: 'Hot holding equipment used where required', trainingStatus: 'To be confirmed',
-  reviewDate: '', notes: ''
+  businessName: 'The Small Kitchen', responsiblePerson: 'Owner / food business operator — name to be confirmed', businessAddress: '', contactPhone: '', contactEmail: '',
+  tradingLocation: 'NG5, Nottingham — exact pitch, landowner consent and council permissions to be confirmed before trading',
+  preparationLocation: 'Planned home preparation and food-trailer finishing/service. Home preparation, storage and transport arrangements must be discussed with Nottingham City Council and confirmed as suitable before use.',
+  foodTypes: 'Planned menu: deep-fried chicken strips, chips, rice dishes, chicken curry and other sauces, breakfast items, sandwiches and wraps. Final recipes, ingredients and allergen information to be verified before sale.',
+  serviceStyle: 'Mobile hot-food trailer; cooked to order and/or served from hot-holding equipment where appropriate. Final service and holding procedures to be confirmed for each dish.',
+  staffCount: 'Owner-led; any additional staff and their duties to be confirmed and trained before handling food',
+  waterSupply: 'Fresh-water tank planned/available — confirm potable-water source, tank suitability, cleaning routine and handwashing provision before trading',
+  wastewater: 'Separate wastewater tank planned/available — confirm capacity, secure connections and lawful disposal arrangements before trading',
+  refrigeration: 'Planned under-counter fridge and separate freezer in trailer, with a chest freezer at home. Confirm installed equipment, temperatures, separation, capacity and monitoring arrangements before use.',
+  hotHolding: 'Planned 3-tray food warmer. Confirm it can maintain the required temperature for the actual foods and record checks before relying on it.',
+  trainingStatus: 'Food hygiene and allergen training status to be confirmed; record completed training before food handling',
+  reviewDate: '',
+  notes: 'PRE-TRADING ACTIONS: confirm the home-preparation setup and transport process with Nottingham City Council; confirm exact trading pitch and required permissions; verify water/handwashing and wastewater arrangements; confirm equipment installation and temperature controls; verify final menu ingredients and allergens; complete the relevant safe methods and daily record sheets. Do not treat planned equipment or arrangements as operational until checked. Review this overview before trading and whenever the menu, location, equipment or process changes.'
 }
 
 type PolicyForm = {
